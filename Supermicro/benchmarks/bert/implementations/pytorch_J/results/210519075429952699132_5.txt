@@ -1,0 +1,136 @@
++ echo 'Beginning trial 5 of 10'
+Beginning trial 5 of 10
++ docker exec -it 224d6dd79e06 python -c '
+import mlperf_logger 
+from mlperf_logging.mllog import constants 
+mlperf_logger.mlperf_submission_log("language_model")'
+:::MLLOG {"namespace": "", "time_ms": 1621423449356, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "language_model", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1621423449377, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "NVIDIA", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1621423449377, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 75}}
+:::MLLOG {"namespace": "", "time_ms": 1621423449377, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 79}}
+:::MLLOG {"namespace": "", "time_ms": 1621423449377, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "1xSUBMISSION_PLATFORM_PLACEHOLDER", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 83}}
++ '[' 1 -eq 1 ']'
++ sync
++ sudo /sbin/sysctl vm.drop_caches=3
+vm.drop_caches = 3
++ docker exec -it 224d6dd79e06 python -c '
+from mlperf_logging.mllog import constants 
+from mlperf_logger import log_event 
+log_event(key=constants.CACHE_CLEAR, value=True)'
+:::MLLOG {"namespace": "", "time_ms": 1621423451641, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "<string>", "lineno": 4}}
++ export SEED=32430
++ SEED=32430
++ docker exec -it --env=BATCHSIZE --env=CHECKPOINTDIR --env=CHECKPOINTDIR_PHASE1 --env=DATADIR --env=DATADIR_PHASE2 --env=DGXHT --env=DGXNGPU --env=DGXNNODES --env=DGXNSOCKET --env=DGXSOCKETCORES --env=DGXSYSTEM --env=EVALDIR --env=EVAL_ITER_SAMPLES --env=EVAL_ITER_START_SAMPLES --env=EXTRA_PARAMS --env=GRADIENT_STEPS --env=LR --env=MAX_SAMPLES_TERMINATION --env=MAX_STEPS --env=NCCL_SOCKET_IFNAME --env=OPT_LAMB_BETA_1 --env=OPT_LAMB_BETA_2 --env=PHASE --env=SLURM_NTASKS --env=START_WARMUP_STEP --env=UNITTESTDIR --env=WALLTIME --env=WARMUP_PROPORTION --env=SEED 224d6dd79e06 sh -c './run_and_time.sh "    python -u -m bind_pyt --nsockets_per_node=2 --ncores_per_socket=32 --nproc_per_node=4     /workspace/bert/run_pretraining.py         --train_batch_size=64     --learning_rate=3.5e-4     --opt_lamb_beta_1=0.9     --opt_lamb_beta_2=0.999     --warmup_proportion=0.0     --warmup_steps=0.0     --start_warmup_step=0     --max_steps=13700     --phase2     --max_seq_length=512     --max_predictions_per_seq=76     --input_dir=/workspace/data_phase2     --init_checkpoint=/workspace/phase1/model.ckpt-28252.pt          --do_train     --skip_checkpoint     --train_mlm_accuracy_window_size=0     --target_mlm_accuracy=0.720     --weight_decay_rate=0.01     --max_samples_termination=4500000     --eval_iter_start_samples=150000 --eval_iter_samples=150000     --eval_batch_size=16 --eval_dir=/workspace/evaldata     --cache_eval_data     --output_dir=/results     --fp16 --fused_gelu_bias --fused_mha --dense_seq_output --unpad --unpad_fmha --exchange_padding     --distributed_lamb   --dwu-num-rs-pg=1 --dwu-num-ar-pg=1 --dwu-num-blocks=1      --gradient_accumulation_steps=1     --log_freq=0     --bert_config_path=/workspace/phase1/bert_config.json --allreduce_post_accumulation --allreduce_post_accumulation_fp16" 32430'
+Run vars: id 3713 gpus 4 mparams 
+STARTING TIMING RUN AT 2021-05-19 11:24:11 AM
++ eval '     python -u -m bind_pyt --nsockets_per_node=2 --ncores_per_socket=32 --nproc_per_node=4     /workspace/bert/run_pretraining.py         --train_batch_size=64     --learning_rate=3.5e-4     --opt_lamb_beta_1=0.9     --opt_lamb_beta_2=0.999     --warmup_proportion=0.0     --warmup_steps=0.0     --start_warmup_step=0     --max_steps=13700     --phase2     --max_seq_length=512     --max_predictions_per_seq=76     --input_dir=/workspace/data_phase2     --init_checkpoint=/workspace/phase1/model.ckpt-28252.pt          --do_train     --skip_checkpoint     --train_mlm_accuracy_window_size=0     --target_mlm_accuracy=0.720     --weight_decay_rate=0.01     --max_samples_termination=4500000     --eval_iter_start_samples=150000 --eval_iter_samples=150000     --eval_batch_size=16 --eval_dir=/workspace/evaldata     --cache_eval_data     --output_dir=/results     --fp16 --fused_gelu_bias --fused_mha --dense_seq_output --unpad --unpad_fmha --exchange_padding     --distributed_lamb   --dwu-num-rs-pg=1 --dwu-num-ar-pg=1 --dwu-num-blocks=1      --gradient_accumulation_steps=1     --log_freq=0     --bert_config_path=/workspace/phase1/bert_config.json --allreduce_post_accumulation --allreduce_post_accumulation_fp16 --seed=32430'
+++ python -u -m bind_pyt --nsockets_per_node=2 --ncores_per_socket=32 --nproc_per_node=4 /workspace/bert/run_pretraining.py --train_batch_size=64 --learning_rate=3.5e-4 --opt_lamb_beta_1=0.9 --opt_lamb_beta_2=0.999 --warmup_proportion=0.0 --warmup_steps=0.0 --start_warmup_step=0 --max_steps=13700 --phase2 --max_seq_length=512 --max_predictions_per_seq=76 --input_dir=/workspace/data_phase2 --init_checkpoint=/workspace/phase1/model.ckpt-28252.pt --do_train --skip_checkpoint --train_mlm_accuracy_window_size=0 --target_mlm_accuracy=0.720 --weight_decay_rate=0.01 --max_samples_termination=4500000 --eval_iter_start_samples=150000 --eval_iter_samples=150000 --eval_batch_size=16 --eval_dir=/workspace/evaldata --cache_eval_data --output_dir=/results --fp16 --fused_gelu_bias --fused_mha --dense_seq_output --unpad --unpad_fmha --exchange_padding --distributed_lamb --dwu-num-rs-pg=1 --dwu-num-ar-pg=1 --dwu-num-blocks=1 --gradient_accumulation_steps=1 --log_freq=0 --bert_config_path=/workspace/phase1/bert_config.json --allreduce_post_accumulation --allreduce_post_accumulation_fp16 --seed=32430
+:::MLLOG {"namespace": "", "time_ms": 1621423453447, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 996}}
+:::MLLOG {"namespace": "", "time_ms": 1621423453454, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 996}}
+:::MLLOG {"namespace": "", "time_ms": 1621423453467, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 996}}
+:::MLLOG {"namespace": "", "time_ms": 1621423453470, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 996}}
+device: cuda:0 n_gpu: 4, distributed training: True, 16-bits training: True
+device: cuda:1 n_gpu: 4, distributed training: True, 16-bits training: True
+:::MLLOG {"namespace": "", "time_ms": 1621423454532, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "bert", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454533, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "NVIDIA", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454533, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 75}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 79}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "1xSUBMISSION_PLATFORM_PLACEHOLDER", "metadata": {"file": "/workspace/bert/mlperf_logger.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "seed", "value": 32430, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1006}}
+device: cuda:2 n_gpu: 4, distributed training: True, 16-bits training: True
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 256, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1008}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "d_batch_size", "value": 64, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1010}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454534, "event_type": "POINT_IN_TIME", "key": "gradient_accumulation_steps", "value": 1, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1012}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454535, "event_type": "POINT_IN_TIME", "key": "max_predictions_per_seq", "value": 76, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1014}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454535, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_training_steps", "value": 13700.0, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1016}}
+:::MLLOG {"namespace": "", "time_ms": 1621423454535, "event_type": "POINT_IN_TIME", "key": "num_warmup_steps", "value": 0, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1018}}
+parsed args:
+Namespace(allreduce_post_accumulation=True, allreduce_post_accumulation_fp16=True, bert_config_path='/workspace/phase1/bert_config.json', bert_model='bert-large-uncased', bypass_amp=False, cache_eval_data=True, checkpoint_activations=False, cuda_graph_mode='segmented', ddp_type='apex', dense_seq_output=True, device=device(type='cuda', index=0), disable_apex_softmax=False, disable_fuse_mask=False, disable_fuse_qkv=False, disable_fuse_scale=False, distributed_lamb=True, do_train=True, dwu_e5m2_allgather=False, dwu_group_size=0, dwu_num_ag_pg=2, dwu_num_ar_pg=1, dwu_num_blocks=1, dwu_num_chunks=1, dwu_num_rs_pg=1, dwu_overlap_reductions=False, enable_fuse_dropout=False, enable_stream=False, eval_batch_size=16, eval_dir='/workspace/evaldata', eval_iter_samples=150000, eval_iter_start_samples=150000, exchange_padding=True, fp16=True, fused_dropout_add=False, fused_gelu_bias=True, fused_mha=True, gradient_accumulation_steps=1, init_checkpoint='/workspace/phase1/model.ckpt-28252.pt', init_tf_checkpoint=None, input_dir='/workspace/data_phase2', keep_n_most_recent_checkpoints=20, learning_rate=0.00035, local_rank=0, log_freq=0.0, loss_scale=0.0, max_iterations_per_graph=4, max_predictions_per_seq=76, max_samples_termination=4500000.0, max_seq_length=512, max_steps=13700.0, min_samples_to_start_checkpoints=3000000, n_gpu=4, num_epochs_to_generate_seeds_for=2, num_eval_examples=10000, num_samples_per_checkpoint=500000, opt_lamb_beta_1=0.9, opt_lamb_beta_2=0.999, output_dir='/results', pad=False, phase2=True, resume_from_checkpoint=False, seed=32430, skip_checkpoint=True, start_warmup_step=0.0, target_mlm_accuracy=0.72, train_batch_size=64, train_mlm_accuracy_window_size=0, unpad=True, unpad_fmha=True, use_cuda_graph=False, use_ddp=False, use_env=False, use_gradient_as_bucket_view=False, warmup_proportion=0.0, warmup_steps=0.0, weight_decay_rate=0.01)
+device: cuda:3 n_gpu: 4, distributed training: True, 16-bits training: True
+:::MLLOG {"namespace": "", "time_ms": 1621423459622, "event_type": "POINT_IN_TIME", "key": "opt_base_learning_rate", "value": 0.00035, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 669}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459684, "event_type": "POINT_IN_TIME", "key": "opt_epsilon", "value": 1e-06, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 699}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459684, "event_type": "POINT_IN_TIME", "key": "opt_lamb_beta_1", "value": 0.9, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 702}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459685, "event_type": "POINT_IN_TIME", "key": "opt_lamb_beta_2", "value": 0.999, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 703}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459685, "event_type": "POINT_IN_TIME", "key": "opt_lamb_weight_decay_rate", "value": 0.0, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 704}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459697, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_steps", "value": 0, "metadata": {"file": "/workspace/bert/schedulers.py", "lineno": 86}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459697, "event_type": "POINT_IN_TIME", "key": "opt_lamb_learning_rate_decay_poly_power", "value": 1.0, "metadata": {"file": "/workspace/bert/schedulers.py", "lineno": 87}}
+:::MLLOG {"namespace": "", "time_ms": 1621423459697, "event_type": "POINT_IN_TIME", "key": "start_warmup_step", "value": 0, "metadata": {"file": "/workspace/bert/schedulers.py", "lineno": 88}}
+Torch distributed is available.
+Torch distributed is initialized.
+Torch distributed is available.
+Torch distributed is initialized.
+Torch distributed is available.
+Torch distributed is initialized.
+Torch distributed is available.
+Torch distributed is initialized.
+:::MLLOG {"namespace": "", "time_ms": 1621423468521, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1264}}
+:::MLLOG {"namespace": "", "time_ms": 1621423468527, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1265}}
+:::MLLOG {"namespace": "", "time_ms": 1621423468553, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1276, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1621423468555, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1278, "first_epoch_num": 1, "epoch_count": 1}}
+parsed args:
+Namespace(allreduce_post_accumulation=True, allreduce_post_accumulation_fp16=True, bert_config_path='/workspace/phase1/bert_config.json', bert_model='bert-large-uncased', bypass_amp=False, cache_eval_data=True, checkpoint_activations=False, cuda_graph_mode='segmented', ddp_type='apex', dense_seq_output=True, device=device(type='cuda', index=0), disable_apex_softmax=False, disable_fuse_mask=False, disable_fuse_qkv=False, disable_fuse_scale=False, distributed_lamb=True, do_train=True, dwu_e5m2_allgather=False, dwu_group_size=0, dwu_num_ag_pg=2, dwu_num_ar_pg=1, dwu_num_blocks=1, dwu_num_chunks=1, dwu_num_rs_pg=1, dwu_overlap_reductions=False, enable_fuse_dropout=False, enable_stream=False, eval_batch_size=16, eval_dir='/workspace/evaldata', eval_iter_samples=150000, eval_iter_start_samples=150000, exchange_padding=True, fp16=True, fused_dropout_add=False, fused_gelu_bias=True, fused_mha=True, gradient_accumulation_steps=1, init_checkpoint='/workspace/phase1/model.ckpt-28252.pt', init_tf_checkpoint=None, input_dir='/workspace/data_phase2', keep_n_most_recent_checkpoints=20, learning_rate=0.00035, local_rank=0, log_freq=0.0, loss_scale=0.0, max_iterations_per_graph=4, max_predictions_per_seq=76, max_samples_termination=4500000.0, max_seq_length=512, max_steps=13700.0, min_samples_to_start_checkpoints=3000000, n_gpu=4, num_epochs_to_generate_seeds_for=2, num_eval_examples=10000, num_samples_per_checkpoint=500000, opt_lamb_beta_1=0.9, opt_lamb_beta_2=0.999, output_dir='/results', pad=False, phase2=True, resume_from_checkpoint=False, resume_step=0, seed=32430, skip_checkpoint=True, start_warmup_step=0.0, target_mlm_accuracy=0.72, train_batch_size=64, train_mlm_accuracy_window_size=0, unpad=True, unpad_fmha=True, use_cuda_graph=False, use_ddp=False, use_env=False, use_gradient_as_bucket_view=False, warmup_proportion=0.0, warmup_steps=0.0, weight_decay_rate=0.01)
+epoch: 1
+:::MLLOG {"namespace": "", "time_ms": 1621423592174, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 586, 'eval_loss': 8.006936073303223, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621423712256, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 1172, 'eval_loss': 7.993160247802734, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621423835996, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 1758, 'eval_loss': 7.988290786743164, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621423959084, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 2344, 'eval_loss': 7.98780632019043, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424083155, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 2930, 'eval_loss': 7.986601829528809, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424207454, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 3516, 'eval_loss': 7.988548755645752, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424335448, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 4102, 'eval_loss': 7.983970642089844, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424462990, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 4688, 'eval_loss': 7.983829498291016, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424584278, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 5274, 'eval_loss': 7.992859840393066, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424703400, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 5860, 'eval_loss': 7.987931728363037, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424826496, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 6446, 'eval_loss': 7.987128734588623, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621424949790, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 7032, 'eval_loss': 7.987159252166748, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621425072264, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 7618, 'eval_loss': 7.985725402832031, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621425194061, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 8204, 'eval_loss': 7.986300468444824, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621425343559, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 8790, 'eval_loss': 7.975550174713135, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621425503908, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.056412842124700546, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 9375, 'eval_loss': 7.9757208824157715, 'eval_mlm_accuracy': 0.056412842124700546}
+:::MLLOG {"namespace": "", "time_ms": 1621425662143, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.08227695524692535, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 9961, 'eval_loss': 7.868849277496338, 'eval_mlm_accuracy': 0.08227695524692535}
+:::MLLOG {"namespace": "", "time_ms": 1621425817023, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.1063782349228859, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 10547, 'eval_loss': 7.590540409088135, 'eval_mlm_accuracy': 0.1063782349228859}
+:::MLLOG {"namespace": "", "time_ms": 1621425961480, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.119595967233181, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 11133, 'eval_loss': 7.448591709136963, 'eval_mlm_accuracy': 0.119595967233181}
+:::MLLOG {"namespace": "", "time_ms": 1621426099865, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.128022238612175, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 11719, 'eval_loss': 7.4027276039123535, 'eval_mlm_accuracy': 0.128022238612175}
+:::MLLOG {"namespace": "", "time_ms": 1621426228384, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.13380543887615204, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 12305, 'eval_loss': 7.351424217224121, 'eval_mlm_accuracy': 0.13380543887615204}
+:::MLLOG {"namespace": "", "time_ms": 1621426349823, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.13639509677886963, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 12891, 'eval_loss': 7.3233256340026855, 'eval_mlm_accuracy': 0.13639509677886963}
+:::MLLOG {"namespace": "", "time_ms": 1621426476891, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.1366761326789856, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1441, "epoch_num": 1}}
+{'global_steps': 13477, 'eval_loss': 7.3022260665893555, 'eval_mlm_accuracy': 0.1366761326789856}
+(1, 13716.0) {'final_loss': 0.0}
+:::MLLOG {"namespace": "", "time_ms": 1621426524756, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1567, "first_epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1621426524756, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1570, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1621426524757, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 3450112, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1574}}
+:::MLLOG {"namespace": "", "time_ms": 1621426524757, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 10000, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1577}}
+:::MLLOG {"namespace": "", "time_ms": 1621426524757, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "/workspace/bert/run_pretraining.py", "lineno": 1580, "status": "aborted"}}
+{'e2e_time': 3071.387617826462, 'training_sequences_per_second': 1144.8527951093456, 'final_loss': 0.0, 'raw_train_time': 3063.450615644455}
+++ date +%s
++ END=1621426526
+++ date '+%Y-%m-%d %r'
++ END_FMT='2021-05-19 12:15:26 PM'
++ echo 'ENDING TIMING RUN AT 2021-05-19 12:15:26 PM'
+ENDING TIMING RUN AT 2021-05-19 12:15:26 PM
++ RESULT=3075
++ RESULT_NAME=bert
++ echo 'RESULT,bert,32430,3075,,2021-05-19 11:24:11 AM'
+RESULT,bert,32430,3075,,2021-05-19 11:24:11 AM
++ set +x

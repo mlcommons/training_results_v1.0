@@ -1,0 +1,40 @@
+image_classification:
+    extends: .build
+    variables: &RN50_VARS
+      FRAMEWORK: "mxnet"
+      MODEL_NAME: "RN50v1.5"
+      DATADIR: "/raid/datasets/train-val-recordio-passthrough"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - image_classification/mxnet/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.rn50: &RN50_ON_CLUSTER
+   extends: .benchmark
+   needs: ["image_classification"]
+   variables:
+      <<: *RN50_VARS
+
+.rn50_dgx1: &RN50_ON_CLUSTER_DGX1
+   extends:
+     - .rn50
+     - .DGX1
+
+.rn50_dgx2: &RN50_ON_CLUSTER_DGX2
+   extends:
+     - .rn50
+     - .DGX2
+
+.rn50_dgxa100: &RN50_ON_CLUSTER_DGXA100
+   extends:
+     - .rn50
+     - .DGXA100
+

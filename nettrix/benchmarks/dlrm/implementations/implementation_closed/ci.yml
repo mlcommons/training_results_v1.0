@@ -1,0 +1,149 @@
+recommendation-hugectr:
+    extends: .build
+    variables: &DLRM_HUGECTR_VARS
+      BENCHMARK: "recommendation"
+      FRAMEWORK: "hugectr"
+      MODEL_NAME: "DLRM"
+      DATADIR: "/raid/datasets/criteo/mlperf/40m.limit_preshuffled"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - recommendation/hugectr/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.dlrm_hugectr_dgxa100: &DLRM_HUGECTR_ON_DGXA100
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dlrm_hugectr_dgxa100_8x8x1120: &DLRM_HUGECTR_ON_DGXA100_8x8x1120
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dlrm_hugectr_dgxa100_16x8x560:
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dlrm_hugectr_dgxa100_14x8x640:
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dlrm_hugectr_dgxa100_8x8x864: &DLRM_HUGECTR_ON_DGXA100_8x8x864
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dr_dlrm_hugectr: &DR_DLRM
+   parallel: 10
+
+.dr_dlrm_hugectr_dgxa100: &DR_DLRM_ON_DGXA100
+   extends:
+     - .dlrm_hugectr_dgxa100
+     - .dr_dlrm_hugectr
+
+.dr_dlrm_hugectr_dgxa100_8x8x1120: &DR_DLRM_ON_DGXA100_8x8x1120
+   extends:
+     - .dlrm_hugectr_dgxa100_8x8x1120
+     - .dr_dlrm_hugectr
+
+.dr_dlrm_hugectr_dgxa100_16x8x560:
+   extends:
+     - .dlrm_hugectr_dgxa100_16x8x560
+     - .dr_dlrm_hugectr
+
+.dr_dlrm_hugectr_dgxa100_14x8x640:
+   extends:
+     - .dlrm_hugectr_dgxa100_14x8x640
+     - .dr_dlrm_hugectr
+
+.dr_dlrm_hugectr_dgxa100_8x8x864: &DR_DLRM_ON_DGXA100_8x8x864
+   extends:
+     - .dlrm_hugectr_dgxa100_8x8x864
+     - .dr_dlrm_hugectr
+
+recommendation-hugectr--DGXA100:
+   extends: .dlrm_hugectr_dgxa100
+recommendation-hugectr--DGXA100--dryrun:
+   extends: .dr_dlrm_hugectr_dgxa100
+
+recommendation-hugectr--DGXA100_8x8x1120:
+   extends: .dlrm_hugectr_dgxa100_8x8x1120
+
+recommendation-hugectr--DGXA100_16x8x560:
+   extends: .dlrm_hugectr_dgxa100_16x8x560
+
+recommendation-hugectr--DGXA100_8x8x1120--dryrun:
+   extends: .dr_dlrm_hugectr_dgxa100_8x8x1120
+
+#recommendation-hugectr--DGXA100_16x8x560--dryrun:
+#   extends: .dr_dlrm_hugectr_dgxa100_16x8x560
+
+recommendation-hugectr--DGXA100_8x8x864:
+   extends: .dlrm_hugectr_dgxa100_8x8x864
+
+recommendation-hugectr--DGXA100_14x8x640:
+   extends: .dlrm_hugectr_dgxa100_14x8x640
+
+recommendation-hugectr--DGXA100_14x8x640--dryrun:
+   extends: .dr_dlrm_hugectr_dgxa100_14x8x640
+
+#recommendation-hugectr--DGXA100_8x8x864--dryrun:
+#   extends: .dr_dlrm_hugectr_dgxa100_8x8x864
+
+recommendation-hugectr--DGXA100-variance-test:
+   extends: .dr_dlrm_hugectr_dgxa100
+
+recommendation-hugectr--DGXA100--compliance:
+   extends: .compliance_dgxa100
+   needs: [ recommendation-hugectr--DGXA100--dryrun ]
+   variables:
+     BENCHMARK: "recommendation"
+
+recommendation-hugectr--DGXA100_8x8x1120--compliance:
+   extends: .compliance_dgxa100
+   needs: [ recommendation-hugectr--DGXA100_8x8x1120--dryrun ]
+   variables:
+     BENCHMARK: "recommendation"
+
+#recommendation-hugectr--DGXA100_8x8x864--compliance:
+#   extends: .compliance_dgxa100
+#   needs: [ recommendation-hugectr--DGXA100_8x8x864--dryrun ]
+#   variables:
+#     BENCHMARK: "recommendation"
+
+#recommendation-hugectr--DGXA100_16x8x560--compliance:
+#   extends: .compliance_dgxa100
+#   needs: [ recommendation-hugectr--DGXA100_16x8x560--dryrun ]
+#   variables:
+#     BENCHMARK: "recommendation"
+
+recommendation-hugectr--DGXA100_14x8x640--compliance:
+   extends: .compliance_dgxa100
+   needs: [ recommendation-hugectr--DGXA100_14x8x640--dryrun ]
+   variables:
+     BENCHMARK: "recommendation"

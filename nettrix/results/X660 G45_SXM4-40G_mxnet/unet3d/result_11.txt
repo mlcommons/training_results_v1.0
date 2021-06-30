@@ -1,0 +1,715 @@
++ echo 'Beginning trial 11 of 40'
+Beginning trial 11 of 40
++ docker exec -it image_segmentation python -c '
+import mlperf_logger
+from mlperf_logging.mllog import constants
+mlperf_logger.mlperf_submission_log()'
+:::MLLOG {"namespace": "", "time_ms": 1621538143931, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "unet3d", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 101}}
+:::MLLOG {"namespace": "", "time_ms": 1621538143938, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "Nettrix", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 106}}
+:::MLLOG {"namespace": "", "time_ms": 1621538143938, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 110}}
+:::MLLOG {"namespace": "", "time_ms": 1621538143938, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 114}}
+:::MLLOG {"namespace": "", "time_ms": 1621538143938, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "X660 G45", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 118}}
++ '[' 1 -eq 1 ']'
++ sync
++ sudo /sbin/sysctl vm.drop_caches=3
+vm.drop_caches = 3
++ docker exec -it image_segmentation python -c '
+from mlperf_logging.mllog import constants
+from mlperf_logger import mllog_event
+mllog_event(key=constants.CACHE_CLEAR, value=True)'
+:::MLLOG {"namespace": "", "time_ms": 1621538146532, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "<string>", "lineno": 4}}
++ docker exec -it --env=MLPERF_HOST_OS image_segmentation bash -c 'source config_DGXA100_conv-dali_1x8x7.sh; ./run_inside_docker.sh'
+STARTING TIMING RUN AT 2021-05-20 07:15:46 PM
++ echo 'running benchmark'
+running benchmark
++ DATASET_DIR=/data
++ SEED=-1
++ OPTIMIZER=nag
++ BATCH_SIZE=7
++ VAL_BATCH_SIZE=4
++ LR=2.0
++ MAX_EPOCHS=10000
++ LR_WARMUP_EPOCHS=1000
++ QUALITY_THRESHOLD=0.908
++ START_EVAL_AT=1000
++ EVALUATE_EVERY=20
++ TARGET_DIR=
++ DISTRIBUTED='mpirun --allow-run-as-root --bind-to none --np 8'
++ mpirun --allow-run-as-root --bind-to none --np 8 python main.py --data_dir /data --epochs 10000 --quality_threshold 0.908 --batch_size 7 --evaluate_every 20 --start_eval_at 1000 --lr_warmup_epochs 1000 --optimizer nag --learning_rate 2.0 --layout NDHWC --amp --loader dali --val_batch_size 4 --num_workers 4 --input_batch_multiplier 3
+:::MLLOG {"namespace": "", "time_ms": 1621538149152, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "main.py", "lineno": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149196, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "main.py", "lineno": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149196, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "unet3d", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 101}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149197, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "Nettrix", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 106}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149198, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 110}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149198, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 114}}
+:::MLLOG {"namespace": "", "time_ms": 1621538149198, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "X660 G45", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 118}}
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:15:53] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for GPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[Using random master seed: 114150645. Worker seeds 8: [4116060031, 2285816115, 1967795678, 2357216680, 3889414638, 2559329841, 3119586169, 2767448823]
+19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+[19:16:01] ../src/storage/storage.cc:199: Using Pooled (Naive) StorageManager for CPU
+RANK 1. SEED 2285816115
+RANK 2. SEED 1967795678
+RANK 0. SEED 4116060031
+:::MLLOG {"namespace": "", "time_ms": 1621538161043, "event_type": "POINT_IN_TIME", "key": "seed", "value": 4116060031, "metadata": {"file": "main.py", "lineno": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_name", "value": "nag", "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 124}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_base_learning_rate", "value": 2.0, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 125}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_epochs", "value": 1000, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 126}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_decay_boundary_epochs", "value": [], "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 128}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_decay_factor", "value": 1.0, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 129}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161044, "event_type": "POINT_IN_TIME", "key": "opt_weight_decay", "value": 0.0, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 130}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161045, "event_type": "POINT_IN_TIME", "key": "opt_momentum", "value": 0.9, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 131}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161045, "event_type": "POINT_IN_TIME", "key": "oversampling", "value": 0.4, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 132}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161045, "event_type": "POINT_IN_TIME", "key": "training_input_shape", "value": [128, 128, 128], "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 133}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161045, "event_type": "POINT_IN_TIME", "key": "validation_input_shape", "value": [128, 128, 128], "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 134}}
+:::MLLOG {"namespace": "", "time_ms": 1621538161045, "event_type": "POINT_IN_TIME", "key": "validation_overlap", "value": 0.5, "metadata": {"file": "/workspace/unet3d/mlperf_logger.py", "lineno": 135}}
+RANK 7. SEED 2767448823
+RANK 6. SEED 3119586169
+RANK 5. SEED 2559329841
+RANK 3. SEED 2357216680
+RANK 4. SEED 3889414638
+:::MLLOG {"namespace": "", "time_ms": 1621538162601, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "main.py", "lineno": 97}}
+:::MLLOG {"namespace": "", "time_ms": 1621538162602, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "main.py", "lineno": 99}}
+:::MLLOG {"namespace": "", "time_ms": 1621538162604, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 168, "metadata": {"file": "/workspace/unet3d/data_loading/data_loader.py", "lineno": 107}}
+:::MLLOG {"namespace": "", "time_ms": 1621538162604, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 42, "metadata": {"file": "/workspace/unet3d/data_loading/data_loader.py", "lineno": 108}}
+RANK 3, VAL CASES ['00005', '00189', '00157', '00012', '00187']
+RANK 0, VAL CASES ['00066', '00128', '00078', '00161', '00087', '00112']
+RANK 5, VAL CASES ['00084', '00006', '00000', '00203', '00076']
+RANK 2, VAL CASES ['00034', '00198', '00003', '00080', '00065']
+:::MLLOG {"namespace": "", "time_ms": 1621538167679, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 56, "metadata": {"file": "main.py", "lineno": 105}}
+:::MLLOG {"namespace": "", "time_ms": 1621538167679, "event_type": "POINT_IN_TIME", "key": "gradient_accumulation_steps", "value": 1, "metadata": {"file": "main.py", "lineno": 106}}
+:::MLLOG {"namespace": "", "time_ms": 1621538167679, "event_type": "POINT_IN_TIME", "key": "samples_per_epoch", "value": 168, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1621538167680, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1, "epoch_count": 20}}
+RANK 1, VAL CASES ['00044', '00207', '00206', '00049', '00070', '00160']
+RANK 4, VAL CASES ['00185', '00171', '00052', '00056', '00024']
+RANK 7, VAL CASES ['00125', '00111', '00086', '00061', '00138']
+RANK 6, VAL CASES ['00176', '00092', '00169', '00162', '00041']
+:::MLLOG {"namespace": "", "time_ms": 1621538194627, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 124.68985881913198, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538194627, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.03983311258278146, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538194627, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 124.68985881913198, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1621538194627, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 20, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538194628, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 20, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538208304, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 245.68760990065428, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538208305, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.07956622516556291, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538208306, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 245.68760990065428, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538208306, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 40, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538208306, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 40, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538221690, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.05193612504715, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538221691, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.11929933774834438, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538221691, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.05193612504715, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1621538221691, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 60, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538221691, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 60, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538235086, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 250.83413341303338, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538235087, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.1590324503311258, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538235087, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 250.83413341303338, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1621538235087, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 80, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538235087, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 80, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538248469, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.08432847982596, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538248471, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.1987655629139073, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538248471, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.08432847982596, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 80}}
+:::MLLOG {"namespace": "", "time_ms": 1621538248471, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 100, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538248472, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 100, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538261834, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.46111693620745, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538261834, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.23849867549668874, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538261835, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.46111693620745, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 100}}
+:::MLLOG {"namespace": "", "time_ms": 1621538261835, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 120, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538261835, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 120, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538275166, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.0474192186607, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538275166, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.2782317880794702, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538275167, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.0474192186607, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 120}}
+:::MLLOG {"namespace": "", "time_ms": 1621538275167, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 140, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538275167, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 140, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538288512, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.77513110059795, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538288512, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.31796490066225164, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538288513, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.77513110059795, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 140}}
+:::MLLOG {"namespace": "", "time_ms": 1621538288513, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 160, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538288513, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 160, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538301858, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.78122613678116, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538301858, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.3576980132450331, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538301858, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.78122613678116, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 160}}
+:::MLLOG {"namespace": "", "time_ms": 1621538301859, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 180, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538301859, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 180, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538315187, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.10032042081508, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538315187, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.3974311258278146, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538315187, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.10032042081508, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 180}}
+:::MLLOG {"namespace": "", "time_ms": 1621538315188, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 200, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538315188, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 200, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538328515, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.11842816523819, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538328515, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.437164238410596, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538328515, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.11842816523819, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 200}}
+:::MLLOG {"namespace": "", "time_ms": 1621538328516, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 220, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538328516, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 220, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538341823, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.4957594162781, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538341823, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.4768973509933775, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538341823, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.4957594162781, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 220}}
+:::MLLOG {"namespace": "", "time_ms": 1621538341823, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 240, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538341824, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 240, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538355133, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.46134659294214, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538355133, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.5166304635761589, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538355134, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.46134659294214, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 240}}
+:::MLLOG {"namespace": "", "time_ms": 1621538355134, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 260, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538355134, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 260, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538368449, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.3496690807932, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538368449, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.5563635761589404, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538368449, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.3496690807932, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 260}}
+:::MLLOG {"namespace": "", "time_ms": 1621538368449, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 280, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538368449, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 280, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538381778, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.08166517415967, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538381779, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.5960966887417218, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538381779, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.08166517415967, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 280}}
+:::MLLOG {"namespace": "", "time_ms": 1621538381779, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 300, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538381779, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 300, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538395104, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.15941584468473, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538395105, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.6358298013245033, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538395105, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.15941584468473, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 300}}
+:::MLLOG {"namespace": "", "time_ms": 1621538395105, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 320, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538395105, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 320, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538408441, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.94518757256031, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538408442, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.6755629139072847, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538408442, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.94518757256031, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 320}}
+:::MLLOG {"namespace": "", "time_ms": 1621538408442, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 340, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538408442, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 340, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538421789, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.75673532704073, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538421789, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.7152960264900662, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538421789, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.75673532704073, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 340}}
+:::MLLOG {"namespace": "", "time_ms": 1621538421789, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 360, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538421789, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 360, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538435148, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.53564781364682, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538435148, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.7550291390728476, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538435148, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.53564781364682, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 360}}
+:::MLLOG {"namespace": "", "time_ms": 1621538435148, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 380, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538435148, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 380, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538448455, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.5025001451281, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538448455, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.7947622516556292, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538448456, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.5025001451281, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 380}}
+:::MLLOG {"namespace": "", "time_ms": 1621538448456, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 400, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538448456, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 400, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538461800, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.7941233964851, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538461801, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.8344953642384105, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538461801, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.7941233964851, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 400}}
+:::MLLOG {"namespace": "", "time_ms": 1621538461801, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 420, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538461801, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 420, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538475109, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.48841740771482, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538475109, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.874228476821192, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538475109, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.48841740771482, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 420}}
+:::MLLOG {"namespace": "", "time_ms": 1621538475109, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 440, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538475110, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 440, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538488405, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.713948005042, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538488406, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.9139615894039735, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538488406, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.713948005042, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 440}}
+:::MLLOG {"namespace": "", "time_ms": 1621538488406, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 460, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538488406, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 460, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538501701, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.725699197905, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538501701, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.953694701986755, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538501702, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.725699197905, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 460}}
+:::MLLOG {"namespace": "", "time_ms": 1621538501702, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 480, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538501702, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 480, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538515006, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.55482767788706, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538515007, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 0.9934278145695364, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538515007, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.55482767788706, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 480}}
+:::MLLOG {"namespace": "", "time_ms": 1621538515007, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 500, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538515007, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 500, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538528318, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.43253171379425, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538528318, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.0331609271523179, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538528319, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.43253171379425, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 500}}
+:::MLLOG {"namespace": "", "time_ms": 1621538528319, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 520, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538528319, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 520, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538541615, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.72277149422655, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538541615, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.0728940397350994, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538541616, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.72277149422655, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 520}}
+:::MLLOG {"namespace": "", "time_ms": 1621538541616, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 540, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538541616, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 540, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538554923, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.50221060306856, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538554924, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.1126271523178808, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538554924, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.50221060306856, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 540}}
+:::MLLOG {"namespace": "", "time_ms": 1621538554924, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 560, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538554925, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 560, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538568262, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.92822608142947, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538568264, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.1523602649006623, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538568264, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.92822608142947, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 560}}
+:::MLLOG {"namespace": "", "time_ms": 1621538568265, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 580, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538568265, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 580, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538581597, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.03024564365023, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538581598, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.1920933774834437, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538581598, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.03024564365023, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 580}}
+:::MLLOG {"namespace": "", "time_ms": 1621538581598, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 600, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538581599, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 600, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538594934, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.96911589563322, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538594935, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.231826490066225, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538594935, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.96911589563322, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 600}}
+:::MLLOG {"namespace": "", "time_ms": 1621538594936, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 620, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538594936, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 620, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538608295, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.51524908954886, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538608296, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.2715596026490066, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538608296, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.51524908954886, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 620}}
+:::MLLOG {"namespace": "", "time_ms": 1621538608297, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 640, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538608297, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 640, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538621612, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.3623534986141, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538621613, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.3112927152317881, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538621613, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.3623534986141, "iterations": 3, "loss_scale": 65536.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 640}}
+:::MLLOG {"namespace": "", "time_ms": 1621538621614, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 660, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538621614, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 660, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538634942, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.1137735725923, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538634942, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.3510258278145695, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538634943, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.1137735725923, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 660}}
+:::MLLOG {"namespace": "", "time_ms": 1621538634943, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 680, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538634943, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 680, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538648282, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.9093576425185, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538648282, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.390758940397351, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538648282, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.9093576425185, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 680}}
+:::MLLOG {"namespace": "", "time_ms": 1621538648282, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 700, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538648282, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 700, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538661579, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.70616281849775, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538661579, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.4304920529801324, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538661579, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.70616281849775, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 700}}
+:::MLLOG {"namespace": "", "time_ms": 1621538661580, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 720, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538661580, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 720, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538674893, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.3896697699517, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538674893, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.470225165562914, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538674893, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.3896697699517, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 720}}
+:::MLLOG {"namespace": "", "time_ms": 1621538674893, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 740, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538674893, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 740, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538688187, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.75375148776538, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538688187, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.5099582781456953, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538688187, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.75375148776538, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 740}}
+:::MLLOG {"namespace": "", "time_ms": 1621538688188, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 760, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538688188, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 760, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538701479, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.79845130052655, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538701479, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.5496913907284766, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538701479, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.79845130052655, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 760}}
+:::MLLOG {"namespace": "", "time_ms": 1621538701480, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 780, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538701480, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 780, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538714800, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.24154858109378, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538714801, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.5894245033112584, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538714801, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.24154858109378, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 780}}
+:::MLLOG {"namespace": "", "time_ms": 1621538714801, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 800, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538714801, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 800, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538728101, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.6418333060575, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538728101, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.6291576158940397, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538728102, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.6418333060575, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 800}}
+:::MLLOG {"namespace": "", "time_ms": 1621538728102, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 820, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538728102, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 820, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538741420, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.28934178848388, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538741420, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.668890728476821, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538741420, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.28934178848388, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 820}}
+:::MLLOG {"namespace": "", "time_ms": 1621538741421, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 840, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538741421, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 840, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538754744, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.18905743551753, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538754745, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.7086238410596026, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538754745, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.18905743551753, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 840}}
+:::MLLOG {"namespace": "", "time_ms": 1621538754745, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 860, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538754745, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 860, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538768062, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.31400409664718, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538768062, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.748356953642384, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538768062, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.31400409664718, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 860}}
+:::MLLOG {"namespace": "", "time_ms": 1621538768062, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 880, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538768062, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 880, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538781358, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.70744068000758, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538781359, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.7880900662251658, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538781359, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.70744068000758, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 880}}
+:::MLLOG {"namespace": "", "time_ms": 1621538781359, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 900, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538781359, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 900, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538794669, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.44064823412063, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538794670, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.827823178807947, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538794670, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.44064823412063, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 900}}
+:::MLLOG {"namespace": "", "time_ms": 1621538794670, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 920, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538794670, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 920, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538807949, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 253.03786115997625, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538807949, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.8675562913907284, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538807950, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 253.03786115997625, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 920}}
+:::MLLOG {"namespace": "", "time_ms": 1621538807950, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 940, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538807950, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 940, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538821261, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.41208672644328, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538821262, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.90728940397351, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538821262, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.41208672644328, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 940}}
+:::MLLOG {"namespace": "", "time_ms": 1621538821262, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 960, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538821262, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 960, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538834601, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 251.89255855451393, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538834602, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.9470225165562913, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538834602, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 251.89255855451393, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 960}}
+:::MLLOG {"namespace": "", "time_ms": 1621538834602, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 980, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538834602, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 980, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538847934, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 252.0291729363109, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538847934, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 1.9867556291390729, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538847934, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 252.0291729363109, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 980}}
+:::MLLOG {"namespace": "", "time_ms": 1621538847934, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1000, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1000}}
+EVALUATION TIME: 5.231 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538853166, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8806280493736267, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1000}}
+:::MLLOG {"namespace": "", "time_ms": 1621538853166, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1000}}
+:::MLLOG {"namespace": "", "time_ms": 1621538853167, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1000, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538853167, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1000, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538867269, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 238.25284175054483, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538867270, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538867270, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 238.25284175054483, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1000}}
+:::MLLOG {"namespace": "", "time_ms": 1621538867270, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1020, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1020}}
+EVALUATION TIME: 3.755 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538871025, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8709229230880737, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1020}}
+:::MLLOG {"namespace": "", "time_ms": 1621538871026, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1020}}
+:::MLLOG {"namespace": "", "time_ms": 1621538871026, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1020, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538871026, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1020, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538884975, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 240.87987636773914, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538884975, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538884975, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 240.87987636773914, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1020}}
+:::MLLOG {"namespace": "", "time_ms": 1621538884975, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1040, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1040}}
+EVALUATION TIME: 3.788 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538888763, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8859342336654663, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1040}}
+:::MLLOG {"namespace": "", "time_ms": 1621538888763, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1040}}
+:::MLLOG {"namespace": "", "time_ms": 1621538888764, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1040, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538888764, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1040, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538902775, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.80307401874649, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538902776, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538902776, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.80307401874649, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1040}}
+:::MLLOG {"namespace": "", "time_ms": 1621538902776, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1060, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1060}}
+EVALUATION TIME: 3.759 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538906535, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8697800636291504, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1060}}
+:::MLLOG {"namespace": "", "time_ms": 1621538906535, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1060}}
+:::MLLOG {"namespace": "", "time_ms": 1621538906535, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1060, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538906535, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1060, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538920585, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.14971487823328, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538920586, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538920586, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.14971487823328, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1060}}
+:::MLLOG {"namespace": "", "time_ms": 1621538920586, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1080, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1080}}
+EVALUATION TIME: 3.834 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538924420, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8972206115722656, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1080}}
+:::MLLOG {"namespace": "", "time_ms": 1621538924420, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1080}}
+:::MLLOG {"namespace": "", "time_ms": 1621538924420, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1080, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538924420, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1080, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538938651, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 236.10495272409625, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538938652, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538938652, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 236.10495272409625, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1080}}
+:::MLLOG {"namespace": "", "time_ms": 1621538938652, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1100, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1100}}
+EVALUATION TIME: 3.747 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538942399, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8977252244949341, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1100}}
+:::MLLOG {"namespace": "", "time_ms": 1621538942399, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1100}}
+:::MLLOG {"namespace": "", "time_ms": 1621538942400, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1100, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538942400, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1100, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538956393, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 240.11374275801109, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538956394, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538956394, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 240.11374275801109, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1100}}
+:::MLLOG {"namespace": "", "time_ms": 1621538956394, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1120, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1120}}
+EVALUATION TIME: 3.831 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538960225, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8967804908752441, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1120}}
+:::MLLOG {"namespace": "", "time_ms": 1621538960226, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1120}}
+:::MLLOG {"namespace": "", "time_ms": 1621538960226, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1120, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538960226, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1120, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538974296, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 238.81240556306707, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538974296, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538974296, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 238.81240556306707, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1120}}
+:::MLLOG {"namespace": "", "time_ms": 1621538974296, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1140, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1140}}
+EVALUATION TIME: 3.752 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538978048, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8934091329574585, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1140}}
+:::MLLOG {"namespace": "", "time_ms": 1621538978048, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1140}}
+:::MLLOG {"namespace": "", "time_ms": 1621538978048, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1140, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538978048, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1140, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538992192, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 237.55880266084657, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621538992193, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621538992193, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 237.55880266084657, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1140}}
+:::MLLOG {"namespace": "", "time_ms": 1621538992193, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1160, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1160}}
+EVALUATION TIME: 3.875 s.
+:::MLLOG {"namespace": "", "time_ms": 1621538996068, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8854802846908569, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1160}}
+:::MLLOG {"namespace": "", "time_ms": 1621538996068, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1160}}
+:::MLLOG {"namespace": "", "time_ms": 1621538996068, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1160, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621538996068, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1160, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539010005, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.08633307264003, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539010006, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539010006, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.08633307264003, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1160}}
+:::MLLOG {"namespace": "", "time_ms": 1621539010006, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1180, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1180}}
+EVALUATION TIME: 3.815 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539013821, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.89093017578125, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1180}}
+:::MLLOG {"namespace": "", "time_ms": 1621539013821, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1180}}
+:::MLLOG {"namespace": "", "time_ms": 1621539013821, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1180, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539013821, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1180, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539027937, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 238.03590426798704, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539027938, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539027938, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 238.03590426798704, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1180}}
+:::MLLOG {"namespace": "", "time_ms": 1621539027938, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1200, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1200}}
+EVALUATION TIME: 3.847 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539031785, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8633008003234863, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1200}}
+:::MLLOG {"namespace": "", "time_ms": 1621539031785, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1200}}
+:::MLLOG {"namespace": "", "time_ms": 1621539031785, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1200, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539031785, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1200, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539045734, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 240.88213673119333, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539045734, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539045734, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 240.88213673119333, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1200}}
+:::MLLOG {"namespace": "", "time_ms": 1621539045735, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1220, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1220}}
+EVALUATION TIME: 3.751 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539049486, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8851168751716614, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1220}}
+:::MLLOG {"namespace": "", "time_ms": 1621539049486, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1220}}
+:::MLLOG {"namespace": "", "time_ms": 1621539049486, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1220, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539049486, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1220, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539063395, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.58089155042083, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539063396, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539063396, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.58089155042083, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1220}}
+:::MLLOG {"namespace": "", "time_ms": 1621539063396, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1240, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1240}}
+EVALUATION TIME: 3.845 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539067241, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8859606981277466, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1240}}
+:::MLLOG {"namespace": "", "time_ms": 1621539067241, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1240}}
+:::MLLOG {"namespace": "", "time_ms": 1621539067241, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1240, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539067241, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1240, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539081363, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 237.93537663634308, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539081363, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539081363, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 237.93537663634308, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1240}}
+:::MLLOG {"namespace": "", "time_ms": 1621539081363, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1260, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1260}}
+EVALUATION TIME: 3.764 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539085127, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.88507479429245, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1260}}
+:::MLLOG {"namespace": "", "time_ms": 1621539085128, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1260}}
+:::MLLOG {"namespace": "", "time_ms": 1621539085128, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1260, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539085128, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1260, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539099173, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.24050434356585, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539099173, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539099173, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.24050434356585, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1260}}
+:::MLLOG {"namespace": "", "time_ms": 1621539099173, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1280, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1280}}
+EVALUATION TIME: 3.844 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539103018, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8853861093521118, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1280}}
+:::MLLOG {"namespace": "", "time_ms": 1621539103018, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1280}}
+:::MLLOG {"namespace": "", "time_ms": 1621539103018, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1280, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539103018, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1280, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539117044, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.5610161430661, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539117044, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539117044, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.5610161430661, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1280}}
+:::MLLOG {"namespace": "", "time_ms": 1621539117045, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1300, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1300}}
+EVALUATION TIME: 3.739 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539120784, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8983465433120728, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1300}}
+:::MLLOG {"namespace": "", "time_ms": 1621539120784, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1300}}
+:::MLLOG {"namespace": "", "time_ms": 1621539120785, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1300, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539120785, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1300, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539134584, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 243.48301094538854, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539134585, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539134585, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 243.48301094538854, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1300}}
+:::MLLOG {"namespace": "", "time_ms": 1621539134585, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1320, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1320}}
+EVALUATION TIME: 3.848 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539138433, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8824689388275146, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1320}}
+:::MLLOG {"namespace": "", "time_ms": 1621539138433, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1320}}
+:::MLLOG {"namespace": "", "time_ms": 1621539138434, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1320, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539138434, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1320, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539152412, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 240.36795949730214, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539152413, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539152413, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 240.36795949730214, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1320}}
+:::MLLOG {"namespace": "", "time_ms": 1621539152413, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1340, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1340}}
+EVALUATION TIME: 3.74 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539156153, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8921836614608765, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1340}}
+:::MLLOG {"namespace": "", "time_ms": 1621539156154, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1340}}
+:::MLLOG {"namespace": "", "time_ms": 1621539156154, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1340, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539156154, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1340, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539170062, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.58475949111906, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539170063, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539170063, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.58475949111906, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1340}}
+:::MLLOG {"namespace": "", "time_ms": 1621539170063, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1360, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1360}}
+EVALUATION TIME: 3.846 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539173909, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.894717812538147, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1360}}
+:::MLLOG {"namespace": "", "time_ms": 1621539173909, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1360}}
+:::MLLOG {"namespace": "", "time_ms": 1621539173909, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1360, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539173909, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1360, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539187799, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.8969299883017, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539187800, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539187800, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.8969299883017, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1360}}
+:::MLLOG {"namespace": "", "time_ms": 1621539187800, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1380, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1380}}
+EVALUATION TIME: 3.761 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539191561, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8837441802024841, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1380}}
+:::MLLOG {"namespace": "", "time_ms": 1621539191561, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1380}}
+:::MLLOG {"namespace": "", "time_ms": 1621539191561, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1380, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539191561, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1380, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539205497, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.11181956713253, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539205497, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539205498, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.11181956713253, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1380}}
+:::MLLOG {"namespace": "", "time_ms": 1621539205498, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1400, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1400}}
+EVALUATION TIME: 3.84 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539209338, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8854920864105225, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1400}}
+:::MLLOG {"namespace": "", "time_ms": 1621539209338, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1400}}
+:::MLLOG {"namespace": "", "time_ms": 1621539209338, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1400, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539209338, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1400, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539223376, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.36092298126087, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539223376, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539223376, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.36092298126087, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1400}}
+:::MLLOG {"namespace": "", "time_ms": 1621539223376, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1420, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1420}}
+EVALUATION TIME: 3.749 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539227125, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9042474627494812, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1420}}
+:::MLLOG {"namespace": "", "time_ms": 1621539227125, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1420}}
+:::MLLOG {"namespace": "", "time_ms": 1621539227125, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1420, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539227125, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1420, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539241157, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 239.45585606667026, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539241158, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539241158, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 239.45585606667026, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1420}}
+:::MLLOG {"namespace": "", "time_ms": 1621539241158, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1440, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1440}}
+EVALUATION TIME: 3.855 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539245013, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9028464555740356, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1440}}
+:::MLLOG {"namespace": "", "time_ms": 1621539245013, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1440}}
+:::MLLOG {"namespace": "", "time_ms": 1621539245013, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1440, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539245013, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1440, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539258872, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.44561405241188, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539258873, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539258873, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.44561405241188, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1440}}
+:::MLLOG {"namespace": "", "time_ms": 1621539258873, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1460, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1460}}
+EVALUATION TIME: 3.788 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539262661, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8948997259140015, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1460}}
+:::MLLOG {"namespace": "", "time_ms": 1621539262661, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1460}}
+:::MLLOG {"namespace": "", "time_ms": 1621539262661, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1460, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539262661, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1460, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539276506, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.68798920803619, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539276506, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539276507, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.68798920803619, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1460}}
+:::MLLOG {"namespace": "", "time_ms": 1621539276507, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1480, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1480}}
+EVALUATION TIME: 3.853 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539280359, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8931107521057129, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1480}}
+:::MLLOG {"namespace": "", "time_ms": 1621539280360, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1480}}
+:::MLLOG {"namespace": "", "time_ms": 1621539280360, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1480, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539280360, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1480, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539294288, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.24530018105645, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539294288, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539294288, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.24530018105645, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1480}}
+:::MLLOG {"namespace": "", "time_ms": 1621539294288, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1500, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1500}}
+EVALUATION TIME: 3.754 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539298043, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8919394016265869, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1500}}
+:::MLLOG {"namespace": "", "time_ms": 1621539298043, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1500}}
+:::MLLOG {"namespace": "", "time_ms": 1621539298043, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1500, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539298043, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1500, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539311954, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.53915962776108, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539311954, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539311954, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.53915962776108, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1500}}
+:::MLLOG {"namespace": "", "time_ms": 1621539311955, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1520, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1520}}
+EVALUATION TIME: 3.83 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539315785, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9040094614028931, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1520}}
+:::MLLOG {"namespace": "", "time_ms": 1621539315785, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1520}}
+:::MLLOG {"namespace": "", "time_ms": 1621539315786, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1520, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539315786, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1520, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539329752, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 240.575576195522, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539329753, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539329753, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 240.575576195522, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1520}}
+:::MLLOG {"namespace": "", "time_ms": 1621539329753, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1540, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1540}}
+EVALUATION TIME: 3.763 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539333516, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8887559175491333, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1540}}
+:::MLLOG {"namespace": "", "time_ms": 1621539333517, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1540}}
+:::MLLOG {"namespace": "", "time_ms": 1621539333517, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1540, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539333517, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1540, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539347435, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.4169038375952, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539347436, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539347436, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.4169038375952, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1540}}
+:::MLLOG {"namespace": "", "time_ms": 1621539347436, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1560, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1560}}
+EVALUATION TIME: 3.833 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539351269, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8937985897064209, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1560}}
+:::MLLOG {"namespace": "", "time_ms": 1621539351269, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1560}}
+:::MLLOG {"namespace": "", "time_ms": 1621539351269, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1560, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539351269, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1560, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539365134, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.34446196532818, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539365134, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539365134, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.34446196532818, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1560}}
+:::MLLOG {"namespace": "", "time_ms": 1621539365135, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1580, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1580}}
+EVALUATION TIME: 3.786 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539368921, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8979309797286987, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1580}}
+:::MLLOG {"namespace": "", "time_ms": 1621539368921, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1580}}
+:::MLLOG {"namespace": "", "time_ms": 1621539368921, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1580, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539368921, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1580, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539382778, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.48999217805937, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539382778, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539382778, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.48999217805937, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1580}}
+:::MLLOG {"namespace": "", "time_ms": 1621539382778, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1600, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1600}}
+EVALUATION TIME: 3.844 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539386623, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9048364162445068, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1600}}
+:::MLLOG {"namespace": "", "time_ms": 1621539386623, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1600}}
+:::MLLOG {"namespace": "", "time_ms": 1621539386623, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1600, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539386623, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1600, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539400503, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.08211561751446, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539400503, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539400503, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.08211561751446, "iterations": 3, "loss_scale": 262144.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1600}}
+:::MLLOG {"namespace": "", "time_ms": 1621539400503, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1620, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1620}}
+EVALUATION TIME: 3.747 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539404250, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9026503562927246, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1620}}
+:::MLLOG {"namespace": "", "time_ms": 1621539404251, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1620}}
+:::MLLOG {"namespace": "", "time_ms": 1621539404251, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1620, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539404251, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1620, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539418179, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.24539929390562, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539418179, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539418179, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.24539929390562, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1620}}
+:::MLLOG {"namespace": "", "time_ms": 1621539418179, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1640, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1640}}
+EVALUATION TIME: 3.836 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539422015, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9009233713150024, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1640}}
+:::MLLOG {"namespace": "", "time_ms": 1621539422015, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1640}}
+:::MLLOG {"namespace": "", "time_ms": 1621539422016, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1640, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539422016, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1640, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539435881, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 242.33701918615128, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539435881, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539435881, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 242.33701918615128, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1640}}
+:::MLLOG {"namespace": "", "time_ms": 1621539435881, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1660, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1660}}
+EVALUATION TIME: 3.754 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539439636, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8994969129562378, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1660}}
+:::MLLOG {"namespace": "", "time_ms": 1621539439636, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1660}}
+:::MLLOG {"namespace": "", "time_ms": 1621539439636, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1660, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539439636, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1660, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539453841, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 236.54798950947273, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539453841, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539453842, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 236.54798950947273, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1660}}
+:::MLLOG {"namespace": "", "time_ms": 1621539453842, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1680, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1680}}
+EVALUATION TIME: 3.848 s.
+:::MLLOG {"namespace": "", "time_ms": 1621539457690, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.8972926139831543, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1680}}
+:::MLLOG {"namespace": "", "time_ms": 1621539457690, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1680}}
+:::MLLOG {"namespace": "", "time_ms": 1621539457690, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1680, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539457690, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1680, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539471585, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.8243492007449, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539471585, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539471586, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.8243492007449, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1680}}
+:::MLLOG {"namespace": "", "time_ms": 1621539471586, "event_type": "INTERVAL_START", "key": "eval_start", "value": 1700, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 88, "epoch_num": 1700}}
+EVALUATION TIME: 3.757 s.
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+STOP TRAINING TRIGGERED AFTER EVAL
+:::MLLOG {"namespace": "", "time_ms": 1621539475342, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.9103158712387085, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 91, "epoch_num": 1700}}
+:::MLLOG {"namespace": "", "time_ms": 1621539475343, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 96, "epoch_num": 1700}}
+STOP TRAINING TRIGGERED AFTER EVAL
+:::MLLOG {"namespace": "", "time_ms": 1621539475343, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 102, "status": "success"}}
+:::MLLOG {"namespace": "", "time_ms": 1621539475343, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 114, "first_epoch_num": 1700, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539475343, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 32, "first_epoch_num": 1700, "epoch_count": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1621539489262, "event_type": "POINT_IN_TIME", "key": "throughput", "value": 241.4041876064547, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1621539489262, "event_type": "POINT_IN_TIME", "key": "current_lr", "value": 2.0, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1621539489262, "event_type": "POINT_IN_TIME", "key": "tracked_stats", "value": {"throughput": 241.4041876064547, "iterations": 3, "loss_scale": 131072.0}, "metadata": {"file": "/workspace/unet3d/runtime/training.py", "lineno": 64, "step": 1700}}
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
+/usr/local/lib/python3.8/dist-packages/nvidia/dali/pipeline.py:199: Warning: batch_size is deprecated, please use max_batch_size instead
+  _show_deprecation_warning("batch_size", "max_batch_size")
++ ret_code=0
++ set +x
+ENDING TIMING RUN AT 2021-05-20 07:38:18 PM
+RESULT,image_segmentation,,1352,nvidia,2021-05-20 07:15:46 PM

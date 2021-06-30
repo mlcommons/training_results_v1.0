@@ -1,0 +1,234 @@
+{
+    "layers": [
+        {
+            "label": {
+                "label_dim": 1,
+                "top": "label"
+            },
+            "eval_num_samples": 89137319,
+            "format": "RawAsync",
+            "name": "data",
+            "type": "Data",
+            "async_param": {
+                "num_batches_per_thread": 4,
+                "io_block_size": 512000,
+                "num_threads": 16,
+                "io_depth": 4,
+                "io_alignment": 512
+            },
+            "sparse": [
+                {
+                    "max_nnz": 1,
+                    "slot_num": 26,
+                    "type": "DistributedSlot",
+                    "top": "data1",
+                    "max_feature_num_per_sample": 26
+                }
+            ],
+            "num_samples": 4195196928,
+            "eval_source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/test_data.bin",
+            "source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/train_data.bin",
+            "slot_size_array": [
+                39884406,
+                39043,
+                17289,
+                7420,
+                20263,
+                3,
+                7120,
+                1543,
+                63,
+                38532951,
+                2953546,
+                403346,
+                10,
+                2208,
+                11938,
+                155,
+                4,
+                976,
+                14,
+                39979771,
+                25641295,
+                39664984,
+                585935,
+                12972,
+                108,
+                36
+            ],
+            "dense": {
+                "dense_dim": 13,
+                "top": "dense"
+            },
+            "cache_eval_data": 1319,
+            "check": "None"
+        },
+        {
+            "sparse_embedding_hparam": {
+                "communication_type": "NVLink_SingleNode",
+                "combiner": 0,
+                "embedding_vec_size": 128,
+                "slot_size_array": [
+                    39884406,
+                    39043,
+                    17289,
+                    7420,
+                    20263,
+                    3,
+                    7120,
+                    1543,
+                    63,
+                    38532951,
+                    2953546,
+                    403346,
+                    10,
+                    2208,
+                    11938,
+                    155,
+                    4,
+                    976,
+                    14,
+                    39979771,
+                    25641295,
+                    39664984,
+                    585935,
+                    12972,
+                    108,
+                    36
+                ],
+                "max_num_frequent_categories": 2
+            },
+            "top": "sparse_embedding1",
+            "bottom": "data1",
+            "name": "sparse_embedding1",
+            "type": "HybridSparseEmbedding"
+        },
+        {
+            "top": "fc1",
+            "fc_param": {
+                "num_output": 512
+            },
+            "bottom": "dense",
+            "name": "fc1",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc2",
+            "fc_param": {
+                "num_output": 256
+            },
+            "bottom": "fc1",
+            "name": "fc2",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc3",
+            "fc_param": {
+                "num_output": 128
+            },
+            "bottom": "fc2",
+            "name": "fc3",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "interaction1",
+            "bottom": [
+                "fc3",
+                "sparse_embedding1"
+            ],
+            "name": "interaction1",
+            "type": "Interaction"
+        },
+        {
+            "top": "fc4",
+            "fc_param": {
+                "num_output": 1024
+            },
+            "bottom": "interaction1",
+            "name": "fc4",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc5",
+            "fc_param": {
+                "num_output": 1024
+            },
+            "bottom": "fc4",
+            "name": "fc5",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc6",
+            "fc_param": {
+                "num_output": 512
+            },
+            "bottom": "fc5",
+            "name": "fc6",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc7",
+            "fc_param": {
+                "num_output": 256
+            },
+            "bottom": "fc6",
+            "name": "fc7",
+            "type": "FusedInnerProduct"
+        },
+        {
+            "top": "fc8",
+            "fc_param": {
+                "num_output": 1
+            },
+            "bottom": "fc7",
+            "name": "fc8",
+            "type": "InnerProduct"
+        },
+        {
+            "top": "loss",
+            "bottom": [
+                "fc8",
+                "label"
+            ],
+            "name": "loss",
+            "type": "BinaryCrossEntropyLoss"
+        }
+    ],
+    "solver": {
+        "max_iter": 58527,
+        "batchsize_eval": 67584,
+        "batchsize": 71680,
+        "eval_batches": 1319,
+        "snapshot": 10000000,
+        "gpu": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "eval_interval": 2926,
+        "lr_policy": "fixed",
+        "snapshot_prefix": "./",
+        "mixed_precision": 1024,
+        "display": 100,
+        "eval_metrics": [
+            "AUC:0.8025"
+        ]
+    },
+    "optimizer": {
+        "type": "SGD",
+        "sgd_hparam": {
+            "decay_power": 2.0,
+            "warmup_steps": 2500,
+            "decay_start": 46821,
+            "learning_rate": 26,
+            "decay_steps": 15406,
+            "atomic_update": true,
+            "end_lr": 0.0
+        }
+    }
+}

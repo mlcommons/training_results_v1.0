@@ -1,0 +1,32 @@
+######################################################
+ssd_mxnet:
+    extends: .build
+    variables: &SSDMXNET_VARS
+      FRAMEWORK: "mxnet"
+      BENCHMARK: "single_stage_detector"
+      MODEL_NAME: "SSD34"
+      DATADIR: "/raid/datasets/coco/coco-2017"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - single_stage_detector/mxnet/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.ssdmx: &SSDMX_ON_CLUSTER
+    needs: ["ssd_mxnet"]
+    extends: .benchmark
+    variables:
+      <<: *SSDMXNET_VARS
+
+.ssdmx_pg: &SSDMX_ON_PRIMERGY
+    extends:
+      - .ssdmx
+      - .PG
+

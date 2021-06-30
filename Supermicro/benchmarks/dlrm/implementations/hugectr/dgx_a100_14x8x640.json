@@ -1,0 +1,443 @@
+{
+    "all_reduce": {
+        "algo": "Oneshot",
+        "grouped": true
+    },
+    "solver": {
+        "display": 1000,
+        "eval_batches": 125,
+        "gpu": [
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ]
+        ],
+        "eval_metrics": [
+            "AUC:0.8025"
+        ],
+        "lr_policy": "fixed",
+        "enable_overlap": true,
+        "snapshot_prefix": "./",
+        "mixed_precision": 1024,
+        "holistic_cuda_graph": true,
+        "eval_interval": 2926,
+        "batchsize": 71680,
+        "batchsize_eval": 716800,
+        "max_iter": 58527,
+        "snapshot": 10000000
+    },
+    "optimizer": {
+        "type": "SGD",
+        "sgd_hparam": {
+            "decay_start": 46821,
+            "warmup_steps": 2500,
+            "decay_power": 2.0,
+            "end_lr": 0.0,
+            "atomic_update": true,
+            "learning_rate": 26,
+            "decay_steps": 15406
+        },
+        "global_update": false
+    },
+    "layers": [
+        {
+            "async_param": {
+                "num_batches_per_thread": 4,
+                "io_block_size": 716800,
+                "shuffle": true,
+                "num_threads": 32,
+                "io_depth": 2,
+                "io_alignment": 512
+            },
+            "eval_num_samples": 89137319,
+            "cache_eval_data": 125,
+            "type": "Data",
+            "format": "RawAsync",
+            "check": "None",
+            "slot_size_array": [
+                39884406,
+                39043,
+                17289,
+                7420,
+                20263,
+                3,
+                7120,
+                1543,
+                63,
+                38532951,
+                2953546,
+                403346,
+                10,
+                2208,
+                11938,
+                155,
+                4,
+                976,
+                14,
+                39979771,
+                25641295,
+                39664984,
+                585935,
+                12972,
+                108,
+                36
+            ],
+            "label": {
+                "label_dim": 1,
+                "top": "label"
+            },
+            "dense": {
+                "dense_dim": 13,
+                "top": "dense"
+            },
+            "eval_source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/test_data.bin",
+            "sparse": [
+                {
+                    "type": "DistributedSlot",
+                    "max_feature_num_per_sample": 26,
+                    "max_nnz": 1,
+                    "slot_num": 26,
+                    "top": "data1"
+                }
+            ],
+            "source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/train_data.bin",
+            "num_samples": 4195196928,
+            "name": "data"
+        },
+        {
+            "type": "HybridSparseEmbedding",
+            "bottom": "data1",
+            "sparse_embedding_hparam": {
+                "slot_size_array": [
+                    39884406,
+                    39043,
+                    17289,
+                    7420,
+                    20263,
+                    3,
+                    7120,
+                    1543,
+                    63,
+                    38532951,
+                    2953546,
+                    403346,
+                    10,
+                    2208,
+                    11938,
+                    155,
+                    4,
+                    976,
+                    14,
+                    39979771,
+                    25641295,
+                    39664984,
+                    585935,
+                    12972,
+                    108,
+                    36
+                ],
+                "combiner": 0,
+                "communication_type": "IB_NVLink_Hierarchical",
+                "embedding_vec_size": 128,
+                "max_num_frequent_categories": 2
+            },
+            "top": "sparse_embedding1",
+            "name": "sparse_embedding1"
+        },
+        {
+            "bottom": "dense",
+            "position": "Head",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 512
+            },
+            "top": [
+                "fc11",
+                "fc12",
+                "fc13",
+                "fc14"
+            ],
+            "name": "fc1"
+        },
+        {
+            "bottom": [
+                "fc11",
+                "fc12",
+                "fc13",
+                "fc14"
+            ],
+            "position": "Body",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 256
+            },
+            "top": [
+                "fc21",
+                "fc22",
+                "fc23",
+                "fc24"
+            ],
+            "name": "fc2"
+        },
+        {
+            "bottom": [
+                "fc21",
+                "fc22",
+                "fc23",
+                "fc24"
+            ],
+            "position": "Tail",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 128
+            },
+            "top": "fc3",
+            "name": "fc3"
+        },
+        {
+            "type": "Interaction",
+            "bottom": [
+                "fc3",
+                "sparse_embedding1"
+            ],
+            "top": "interaction1",
+            "name": "interaction1"
+        },
+        {
+            "bottom": "interaction1",
+            "position": "Head",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 1024
+            },
+            "top": [
+                "fc41",
+                "fc42",
+                "fc43",
+                "fc44"
+            ],
+            "name": "fc4"
+        },
+        {
+            "bottom": [
+                "fc41",
+                "fc42",
+                "fc43",
+                "fc44"
+            ],
+            "position": "Body",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 1024
+            },
+            "top": [
+                "fc51",
+                "fc52",
+                "fc53",
+                "fc54"
+            ],
+            "name": "fc5"
+        },
+        {
+            "bottom": [
+                "fc51",
+                "fc52",
+                "fc53",
+                "fc54"
+            ],
+            "position": "Body",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 512
+            },
+            "top": [
+                "fc61",
+                "fc62",
+                "fc63",
+                "fc64"
+            ],
+            "name": "fc6"
+        },
+        {
+            "bottom": [
+                "fc61",
+                "fc62",
+                "fc63",
+                "fc64"
+            ],
+            "position": "Body",
+            "type": "FusedInnerProduct",
+            "fc_param": {
+                "num_output": 256
+            },
+            "top": [
+                "fc71",
+                "fc72",
+                "fc73",
+                "fc74"
+            ],
+            "name": "fc7"
+        },
+        {
+            "bottom": [
+                "fc71",
+                "fc72",
+                "fc73",
+                "fc74"
+            ],
+            "position": "Tail",
+            "fc_param": {
+                "num_output": 1
+            },
+            "type": "FusedInnerProduct",
+            "name": "fc8",
+            "top": "fc8",
+            "activation": "None"
+        },
+        {
+            "type": "BinaryCrossEntropyLoss",
+            "bottom": [
+                "fc8",
+                "label"
+            ],
+            "top": "loss",
+            "name": "loss"
+        }
+    ]
+}

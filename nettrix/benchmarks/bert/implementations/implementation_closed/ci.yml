@@ -1,0 +1,79 @@
+# Copyright (c) 2018-2019, NVIDIA CORPORATION. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+language_model:
+    extends: .build
+    variables: &LANGUAGE_MODEL_VARS
+      FRAMEWORK: "pytorch"
+      BENCHMARK: "language_model"
+      MODEL_NAME: "BERT"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - language_model/pytorch/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.language_model_on_cluster: &LANGUAGE_MODEL_ON_CLUSTER
+    needs: ["language_model"]
+    extends: .benchmark
+
+.language_model_dgx1: &LANGUAGE_MODEL_ON_DGX1
+    extends:
+      - .language_model_on_cluster
+      - .DGX1
+    variables:
+      <<: *LANGUAGE_MODEL_VARS
+
+.language_model_dgxa100: &LANGUAGE_MODEL_ON_DGXA100
+    extends:
+      - .language_model_on_cluster
+      - .DGXA100
+    variables:
+      <<: *LANGUAGE_MODEL_VARS
+
+#########################
+# Manual Configurations #
+#########################
+
+language_model--DGX1_1x8x6x6:
+    extends: .language_model_dgx1
+
+language_model--DGX1_6x8x6x1--manual:
+    extends: .language_model_dgx1
+
+language_model--DGXA100_1x8x56x1:
+    extends: .language_model_dgxa100
+
+language_model--DGXA100_1x8x32x1_pad--manual:
+    extends: .language_model_dgxa100
+
+language_model--DGXA100_1x8x4x1_pad--manual:
+    extends: .language_model_dgxa100
+
+language_model--DGXA100_2x8x27x1:
+    extends: .language_model_dgxa100
+
+language_model--DGXA100_32x8x20x1:
+    extends: .language_model_dgxa100
+
+language_model--DGXA100_32x8x32x1--manual:
+    extends: .language_model_dgxa100
+

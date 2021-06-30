@@ -1,0 +1,54 @@
+######################################################
+ssd_mxnet:
+    extends: .build
+    variables: &SSDMXNET_VARS
+      FRAMEWORK: "mxnet"
+      BENCHMARK: "single_stage_detector"
+      MODEL_NAME: "SSD34"
+      DATADIR: "/raid/datasets/coco/coco-2017"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - single_stage_detector/mxnet/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.ssdmx: &SSDMX_ON_CLUSTER
+    needs: ["ssd_mxnet"]
+    extends: .benchmark
+    variables:
+      <<: *SSDMXNET_VARS
+
+.ssdmx_dgx1: &SSDMX_ON_DGX1
+    extends:
+      - .ssdmx
+      - .DGX1
+
+.ssdmx_dgx2: &SSDMX_ON_DGX2
+    extends:
+      - .ssdmx
+      - .DGX2
+
+.ssdmx_dgxa100: &SSDMX_ON_DGXA100
+    extends:
+      - .ssdmx
+      - .DGXA100
+
+################################################################################
+# Jobs
+################################################################################
+ssd_mxnet--DGX1_01x08x56:
+    extends: .ssdmx_dgx1
+
+ssd_mxnet--DGX2_01x16x56:
+    extends: .ssdmx_dgx2
+
+ssd_mxnet--DGXA100_1x8x114:
+    extends: .ssdmx_dgxa100
+

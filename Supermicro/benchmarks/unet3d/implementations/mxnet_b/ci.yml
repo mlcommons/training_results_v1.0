@@ -1,0 +1,52 @@
+image_segmentation:
+    extends: .build
+    variables: &UNET3D_VARS
+      FRAMEWORK: "mxnet"
+      BENCHMARK: "image_segmentation"
+      MODEL_NAME: "UNet3D"
+      DATADIR: "/lustre/fsw/mlperf/mlperft-unet3d/dataset/"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - image_segmentation/mxnet/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.unet3d: &UNET3D_ON_CLUSTER
+   extends: .benchmark
+   needs: ["image_segmentation"]
+   variables:
+      <<: *UNET3D_VARS
+
+.unet3d_dgx1: &UNET3D_ON_DGX1
+   extends:
+     - .unet3d
+     - .DGX1
+
+.unet3d_dgxa100: &UNET3D_ON_DGXA100
+   extends:
+     - .unet3d
+     - .DGXA100
+
+# A100
+
+image_segmentation--DGXA100_conv-dali_1x8x4:
+    extends: .unet3d_dgxa100
+
+image_segmentation--DGXA100_conv-dali_1x8x7:
+    extends: .unet3d_dgxa100
+
+image_segmentation--DGXA100_conv-dali_12x8x1:
+    extends: .unet3d_dgxa100
+
+image_segmentation--DGXA100_conv-dali_13x8x1:
+    extends: .unet3d_dgxa100
+
+image_segmentation--DGXA100_conv-dali_26x8x1:
+    extends: .unet3d_dgxa100

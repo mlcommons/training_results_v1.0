@@ -1,0 +1,263 @@
+{
+    "solver": {
+        "batchsize_eval": 110592,
+        "snapshot": 10000000,
+        "eval_interval": 2845,
+        "snapshot_prefix": "./",
+        "eval_metrics": [
+            "AUC:0.8025"
+        ],
+        "batchsize": 73728,
+        "eval_batches": 807,
+        "max_iter": 56902,
+        "lr_policy": "fixed",
+        "display": 1000,
+        "gpu": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "mixed_precision": 1024
+    },
+    "layers": [
+        {
+            "cache_eval_data": 807,
+            "sparse": [
+                {
+                    "max_feature_num_per_sample": 26,
+                    "max_nnz": 1,
+                    "type": "LocalizedSlot",
+                    "top": "data1",
+                    "slot_num": 26
+                }
+            ],
+            "name": "data",
+            "type": "Data",
+            "source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/train_data.bin",
+            "num_samples": 4195196928,
+            "format": "Raw",
+            "check": "None",
+            "eval_num_samples": 89137319,
+            "slot_size_array": [
+                39884406,
+                39043,
+                17289,
+                7420,
+                20263,
+                3,
+                7120,
+                1543,
+                63,
+                38532951,
+                2953546,
+                403346,
+                10,
+                2208,
+                11938,
+                155,
+                4,
+                976,
+                14,
+                39979771,
+                25641295,
+                39664984,
+                585935,
+                12972,
+                108,
+                36
+            ],
+            "dense": {
+                "dense_dim": 13,
+                "top": "dense"
+            },
+            "label": {
+                "label_dim": 1,
+                "top": "label"
+            },
+            "eval_source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/test_data.bin"
+        },
+        {
+            "name": "sparse_embedding1",
+            "type": "LocalizedSlotSparseEmbeddingOneHot",
+            "top": "sparse_embedding1",
+            "bottom": "data1",
+            "sparse_embedding_hparam": {
+                "combiner": 0,
+                "slot_size_array": [
+                    39884406,
+                    39043,
+                    17289,
+                    7420,
+                    20263,
+                    3,
+                    7120,
+                    1543,
+                    63,
+                    38532951,
+                    2953546,
+                    403346,
+                    10,
+                    2208,
+                    11938,
+                    155,
+                    4,
+                    976,
+                    14,
+                    39979771,
+                    25641295,
+                    39664984,
+                    585935,
+                    12972,
+                    108,
+                    36
+                ],
+                "embedding_vec_size": 128
+            }
+        },
+        {
+            "position": "Head",
+            "name": "fc1",
+            "type": "FusedInnerProduct",
+            "bottom": "dense",
+            "fc_param": {
+                "num_output": 512
+            },
+            "top": [
+                "fc11",
+                "fc12"
+            ]
+        },
+        {
+            "position": "Body",
+            "name": "fc2",
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc11",
+                "fc12"
+            ],
+            "fc_param": {
+                "num_output": 256
+            },
+            "top": [
+                "fc21",
+                "fc22"
+            ]
+        },
+        {
+            "position": "Tail",
+            "name": "fc3",
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc21",
+                "fc22"
+            ],
+            "fc_param": {
+                "num_output": 128
+            },
+            "top": "fc3"
+        },
+        {
+            "name": "interaction1",
+            "type": "Interaction",
+            "top": "interaction1",
+            "bottom": [
+                "fc3",
+                "sparse_embedding1"
+            ]
+        },
+        {
+            "position": "Head",
+            "name": "fc4",
+            "type": "FusedInnerProduct",
+            "bottom": "interaction1",
+            "fc_param": {
+                "num_output": 1024
+            },
+            "top": [
+                "fc41",
+                "fc42"
+            ]
+        },
+        {
+            "position": "Body",
+            "name": "fc5",
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc41",
+                "fc42"
+            ],
+            "fc_param": {
+                "num_output": 1024
+            },
+            "top": [
+                "fc51",
+                "fc52"
+            ]
+        },
+        {
+            "position": "Body",
+            "name": "fc6",
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc51",
+                "fc52"
+            ],
+            "fc_param": {
+                "num_output": 512
+            },
+            "top": [
+                "fc61",
+                "fc62"
+            ]
+        },
+        {
+            "position": "Tail",
+            "name": "fc7",
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc61",
+                "fc62"
+            ],
+            "fc_param": {
+                "num_output": 256
+            },
+            "top": "fc7"
+        },
+        {
+            "name": "fc8",
+            "type": "InnerProduct",
+            "top": "fc8",
+            "bottom": "fc7",
+            "fc_param": {
+                "num_output": 1
+            }
+        },
+        {
+            "name": "loss",
+            "type": "BinaryCrossEntropyLoss",
+            "top": "loss",
+            "bottom": [
+                "fc8",
+                "label"
+            ]
+        }
+    ],
+    "optimizer": {
+        "sgd_hparam": {
+            "decay_steps": 16502,
+            "learning_rate": 26,
+            "atomic_update": true,
+            "decay_power": 2.0,
+            "end_lr": 0.0,
+            "warmup_steps": 2500,
+            "decay_start": 45521
+        },
+        "global_update": false,
+        "type": "SGD"
+    }
+}

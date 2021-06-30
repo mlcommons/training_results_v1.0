@@ -1,0 +1,263 @@
+{
+    "optimizer": {
+        "type": "SGD",
+        "sgd_hparam": {
+            "learning_rate": 26,
+            "warmup_steps": 2500,
+            "decay_power": 2.0,
+            "decay_steps": 15518,
+            "decay_start": 49659,
+            "end_lr": 0.0,
+            "atomic_update": true
+        },
+        "global_update": false
+    },
+    "layers": [
+        {
+            "type": "Data",
+            "check": "None",
+            "source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/train_data.bin",
+            "sparse": [
+                {
+                    "type": "LocalizedSlot",
+                    "top": "data1",
+                    "max_feature_num_per_sample": 26,
+                    "max_nnz": 1,
+                    "slot_num": 26
+                }
+            ],
+            "dense": {
+                "top": "dense",
+                "dense_dim": 13
+            },
+            "name": "data",
+            "format": "Raw",
+            "label": {
+                "label_dim": 1,
+                "top": "label"
+            },
+            "eval_num_samples": 89137319,
+            "cache_eval_data": 807,
+            "eval_source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/test_data.bin",
+            "slot_size_array": [
+                39884406,
+                39043,
+                17289,
+                7420,
+                20263,
+                3,
+                7120,
+                1543,
+                63,
+                38532951,
+                2953546,
+                403346,
+                10,
+                2208,
+                11938,
+                155,
+                4,
+                976,
+                14,
+                39979771,
+                25641295,
+                39664984,
+                585935,
+                12972,
+                108,
+                36
+            ],
+            "num_samples": 4195196928
+        },
+        {
+            "type": "LocalizedSlotSparseEmbeddingOneHot",
+            "top": "sparse_embedding1",
+            "sparse_embedding_hparam": {
+                "combiner": 0,
+                "slot_size_array": [
+                    39884406,
+                    39043,
+                    17289,
+                    7420,
+                    20263,
+                    3,
+                    7120,
+                    1543,
+                    63,
+                    38532951,
+                    2953546,
+                    403346,
+                    10,
+                    2208,
+                    11938,
+                    155,
+                    4,
+                    976,
+                    14,
+                    39979771,
+                    25641295,
+                    39664984,
+                    585935,
+                    12972,
+                    108,
+                    36
+                ],
+                "embedding_vec_size": 128
+            },
+            "bottom": "data1",
+            "name": "sparse_embedding1"
+        },
+        {
+            "fc_param": {
+                "num_output": 512
+            },
+            "type": "FusedInnerProduct",
+            "bottom": "dense",
+            "position": "Head",
+            "top": [
+                "fc11",
+                "fc12"
+            ],
+            "name": "fc1"
+        },
+        {
+            "fc_param": {
+                "num_output": 256
+            },
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc11",
+                "fc12"
+            ],
+            "position": "Body",
+            "top": [
+                "fc21",
+                "fc22"
+            ],
+            "name": "fc2"
+        },
+        {
+            "fc_param": {
+                "num_output": 128
+            },
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc21",
+                "fc22"
+            ],
+            "position": "Tail",
+            "top": "fc3",
+            "name": "fc3"
+        },
+        {
+            "type": "Interaction",
+            "top": "interaction1",
+            "bottom": [
+                "fc3",
+                "sparse_embedding1"
+            ],
+            "name": "interaction1"
+        },
+        {
+            "fc_param": {
+                "num_output": 1024
+            },
+            "type": "FusedInnerProduct",
+            "position": "Head",
+            "top": [
+                "fc41",
+                "fc42"
+            ],
+            "bottom": "interaction1",
+            "name": "fc4"
+        },
+        {
+            "fc_param": {
+                "num_output": 1024
+            },
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc41",
+                "fc42"
+            ],
+            "position": "Body",
+            "top": [
+                "fc51",
+                "fc52"
+            ],
+            "name": "fc5"
+        },
+        {
+            "fc_param": {
+                "num_output": 512
+            },
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc51",
+                "fc52"
+            ],
+            "position": "Body",
+            "top": [
+                "fc61",
+                "fc62"
+            ],
+            "name": "fc6"
+        },
+        {
+            "fc_param": {
+                "num_output": 256
+            },
+            "type": "FusedInnerProduct",
+            "bottom": [
+                "fc61",
+                "fc62"
+            ],
+            "position": "Tail",
+            "top": "fc7",
+            "name": "fc7"
+        },
+        {
+            "fc_param": {
+                "num_output": 1
+            },
+            "type": "InnerProduct",
+            "top": "fc8",
+            "bottom": "fc7",
+            "name": "fc8"
+        },
+        {
+            "type": "BinaryCrossEntropyLoss",
+            "top": "loss",
+            "bottom": [
+                "fc8",
+                "label"
+            ],
+            "name": "loss"
+        }
+    ],
+    "solver": {
+        "snapshot_prefix": "./",
+        "eval_batches": 807,
+        "batchsize": 67584,
+        "lr_policy": "fixed",
+        "gpu": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "snapshot": 10000000,
+        "mixed_precision": 1024,
+        "display": 1000,
+        "eval_interval": 3103,
+        "batchsize_eval": 110592,
+        "eval_metrics": [
+            "AUC:0.8025"
+        ],
+        "max_iter": 62074
+    }
+}

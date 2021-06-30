@@ -1,0 +1,14 @@
+## DL params
+export EXTRA_PARAMS=""
+export EXTRA_CONFIG='SOLVER.BASE_LR 0.24 SOLVER.MAX_ITER 40000 SOLVER.WARMUP_FACTOR 0.00008 SOLVER.WARMUP_ITERS 3000 SOLVER.WARMUP_METHOD mlperf_linear SOLVER.STEPS (7000,9333) SOLVER.IMS_PER_BATCH 192 TEST.IMS_PER_BATCH 16 MODEL.RPN.FPN_POST_NMS_TOP_N_TRAIN 12000 MODEL.RPN.PRE_NMS_TOP_N_TRAIN 3000 NHWC True'
+
+## System run parms
+export DGXNNODES=1
+export DGXSYSTEM=$(basename $(readlink -f ${BASH_SOURCE[0]}) | sed 's/^config_//' | sed 's/\.sh$//' )
+export WALLTIME=04:00:00
+
+## System config params
+export DGXNGPU=16
+export DGXSOCKETCORES=24
+export DGXNSOCKET=2
+export DGXHT=2         # HT is on is 2, HT off is 1

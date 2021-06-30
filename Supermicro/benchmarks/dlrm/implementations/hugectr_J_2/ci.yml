@@ -1,0 +1,41 @@
+recommendation-hugectr:
+    extends: .build
+    variables: &DLRM_HUGECTR_VARS
+      BENCHMARK: "recommendation"
+      FRAMEWORK: "hugectr"
+      MODEL_NAME: "DLRM"
+      DATADIR: "/raid/datasets/criteo/mlperf/40m.limit_preshuffled"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - recommendation/hugectr/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.dlrm_hugectr_dgx2: &DLRM_HUGECTR_ON_DGX2
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGX2
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+.dlrm_hugectr_dgxa100: &DLRM_HUGECTR_ON_DGXA100
+    needs: ["recommendation-hugectr"]
+    extends:
+      - .benchmark
+      - .DGXA100
+    variables:
+      <<: *DLRM_HUGECTR_VARS
+
+recommendation-hugectr--DGX2:
+  extends: .dlrm_hugectr_dgx2
+
+recommendation-hugectr--DGXA100:
+   extends: .dlrm_hugectr_dgxa100

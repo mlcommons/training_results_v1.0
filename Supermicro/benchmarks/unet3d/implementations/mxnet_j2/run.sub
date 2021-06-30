@@ -1,0 +1,67 @@
+#!/bin/bash
+#SBATCH --job-name image_classification
+set -euxo pipefail
+
+# Vars without defaults
+: "${DGXSYSTEM:?DGXSYSTEM not set}"
+: "${CONT:?CONT not set}"
+
+# Vars with defaults
+: "${NEXP:=5}"
+: "${DATESTAMP:=$(date +'%y%m%d%H%M%S%N')}"
+: "${CLEAR_CACHES:=1}"
+# ci automagically sets this correctly on Selene
+: "${DATADIR:=/raid/datasets/mlperft-unet3d/kits19/}"
+: "${LOGDIR:=./results}"
+: "${API_LOG_DIR:=./api_logs}" # apiLog.sh output dir
+
+# Other vars
+readonly _logfile_base="${LOGDIR}/${DATESTAMP}"
+readonly _cont_name=image_segmentation
+_cont_mounts="${DATADIR}:/data,${LOGDIR}:/results,/lustre/fsw/mlperf/mlperft-unet3d/rachitg/logs/single_node:/profile_dir"
+if [ "${API_LOGGING:-}" -eq 1 ]; then
+    _cont_mounts="${_cont_mounts},${API_LOG_DIR}:/logs"
+fi
+
+# MLPerf vars
+MLPERF_HOST_OS=$(srun -N1 -n1 bash <<EOF
+    source /etc/os-release
+    source /etc/dgx-release || true
+    echo "\${PRETTY_NAME} / \${DGX_PRETTY_NAME:-???} \${DGX_OTA_VERSION:-\${DGX_SWBUILD_VERSION:-???}}"
+EOF
+)
+export MLPERF_HOST_OS
+
+# Setup directories
+mkdir -p "${LOGDIR}"
+srun --ntasks="${SLURM_JOB_NUM_NODES}" mkdir -p "${LOGDIR}"
+
+# Setup container
+srun --ntasks="${SLURM_JOB_NUM_NODES}" --container-image="${CONT}" --container-name="${_cont_name}" true
+
+
+# Run experiments
+for _experiment_index in $(seq 1 "${NEXP}"); do
+    (
+        echo "Beginning trial ${_experiment_index} of ${NEXP}"
+
+        # Print system info
+        srun -N1 -n1 --container-name="${_cont_name}" python -c "
+import mlperf_logger
+from mlperf_logging.mllog import constants
+mlperf_logger.mlperf_submission_log()"
+
+        # Clear caches
+        if [ "${CLEAR_CACHES}" -eq 1 ]; then
+            srun --ntasks="${SLURM_JOB_NUM_NODES}" bash -c "echo -n 'Clearing cache on ' && hostname && sync && sudo /sbin/sysctl vm.drop_caches=3"
+            srun --ntasks="${SLURM_JOB_NUM_NODES}" --container-name="${_cont_name}" python -c "
+from mlperf_logging.mllog import constants
+from mlperf_logger import mllog_event"
+        fi
+
+        # Run experiment
+        srun --mpi=pmix --ntasks="$(( SLURM_JOB_NUM_NODES * DGXNGPU ))" --ntasks-per-node="${DGXNGPU}" \
+            --container-name="${_cont_name}" --container-mounts="${_cont_mounts}" \
+            ./run_and_time.sh
+    ) |& tee "${_logfile_base}_${_experiment_index}.log"
+done

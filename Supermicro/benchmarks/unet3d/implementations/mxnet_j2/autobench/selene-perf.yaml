@@ -1,0 +1,81 @@
+SELENE: &SELENE
+  hostname: selene-login
+  jump_box: selene-jump
+  account: mlperft-unet3d
+  partition: mlperf
+#  mpi: pmix
+  job_name: mlperf-unet3d:bs4sgd3
+  walltime: 20
+  docker_image: gitlab-master.nvidia.com/dl/joc/unet3d_mx:mlperf
+  datasets:
+    /data: /lustre/fsw/joc/michalm/msd/preprocessed/kits19_padded
+
+reports:
+  filename: A100_perf_NDHWC
+  types:
+    - xls
+
+SELENE_1NODES: &SELENE_1NODES
+  <<: *SELENE
+  total_nodes: 1
+  tasks_per_node: 8
+
+SELENE_2NODES: &SELENE_2NODES
+  <<: *SELENE
+  total_nodes: 2
+  tasks_per_node: 8
+
+SELENE_3NODES: &SELENE_3NODES
+  <<: *SELENE
+  total_nodes: 3
+  tasks_per_node: 8
+
+SELENE_6NODES: &SELENE_6NODES
+  <<: *SELENE
+  total_nodes: 6
+  tasks_per_node: 8
+
+SELENE_7NODES: &SELENE_7NODES
+  <<: *SELENE
+  total_nodes: 7
+  tasks_per_node: 8
+
+
+jobs:
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_1NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_1NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_3NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_3NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_7NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader dali --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_7NODES
+
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_1NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_1NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_3NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_3NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 2 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_7NODES
+  - steps:
+      - python main.py --amp --data_dir /data --epochs 20 --batch_size 4 --optimizer sgd --loader real --layout NDHWC --benchmark --log_dir /results/log.json
+    backend: *SELENE_7NODES

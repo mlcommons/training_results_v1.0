@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+# Copyright (c) 2020 Graphcore Ltd. All rights reserved.
+
+set -u
+
+gwlink_bars=(0xb0100000 0xb0180000)
+gwlink_regoffs=(0x0 0x1 0x02 0x3 0x4 0x05 0x06 0x07 0x08 0x09 0x0a 0x0b 0x0c 0x0d 0x0e 0x0f 0x10 0x11 0x12 0x13 0x14 0x15 0x16 0x17 0x18 0x19 0x1A 0x1B 0x1C 0x1D 0x1E 0x1F 0x20 0x21 0x22 0x23 0x24 0x25)
+gwlink_regnames=(
+  "FPU_PORT_CFG_REG_ADDR                "
+  "FPU_LINK_CFG_REG_ADDR                "
+  "FPU_LINK_CTRL_REG_ADDR               "
+  "FPU_PAUSE_CFG_REG_ADDR               "
+  "FPU_PAUSE_CFG2_REG_ADDR              "
+  "FPU_STAT_TX_FAULT_REG_ADDR           "
+  "FPU_STAT_RX_STATUS_REG_ADDR          "
+  "FPU_STAT_RX_BLOCK_LOCK_REG_ADDR      "
+  "FPU_STAT_RX_SYNCED_REG_ADDR          "
+  "FPU_STAT_RX_LANE_SYNCED_ERR_REG_ADDR "
+  "FPU_STAT_RX_GLBL_PAUSE_COUNT_REG_ADDR"
+  "FPU_STAT_RX_ACK_COUNT_REG_ADDR       "
+  "FPU_STAT_RX_NAK_COUNT_REG_ADDR       "
+  "FPU_STAT_RX_TOTAL_BYTES_0_REG_ADDR   "
+  "FPU_STAT_RX_TOTAL_BYTES_1_REG_ADDR   "
+  "FPU_STAT_RX_GOOD_BYTES_0_REG_ADDR    "
+  "FPU_STAT_RX_GOOD_BYTES_1_REG_ADDR    "
+  "FPU_STAT_RX_GOOD_PACKETS_REG_ADDR    "
+  "FPU_STAT_RX_TOTAL_PACKETS_REG_ADDR   "
+  "FPU_STAT_RX_BAD_FCS_REG_ADDR         "
+  "FPU_STAT_TX_TOTAL_BYTES_0_REG_ADDR   "
+  "FPU_STAT_TX_TOTAL_BYTES_1_REG_ADDR   "
+  "FPU_STAT_TX_TOTAL_PACKETS_REG_ADDR   "
+  "FPU_STAT_RX_TEST_MISMATCH_REG_ADDR   "
+  "FPU_STAT_INTERRUPT_STATUS_REG        "
+  "FPU_STAT_INTERRUPT_MASK_REG          "
+  "FPU_LOCAL_MAC_LOWER_REG              "
+  "FPU_LOCAL_MAC_UPPER_REG              "
+  "FPU_REMOTE_MAC_LOWER_REG             "
+  "FPU_REMOTE_MAC_UPPER_REG             "
+  "FPU_VLAN_REG                         "
+  "FPU_ACK_TIMER_REG                    "
+  "FPU_ERR_REG                          "
+  "FPU_PKT_DROP_REG                     "
+  "FPU_PKT_DROP_HDR_REG                 "
+  "FPU_PKT_DROP_HDR_LOWER_ADDR_REG      "
+  "FPU_PKT_DROP_HDR_UPPER_ADDR_REG      "
+  "FPU_RETRY_TIMEOUT_REG                "
+)
+
+function link_status {
+  echo ""
+  for i in ${!gwlink_bars[@]}
+  do
+	  port=${gwlink_bars[$i]}
+	  echo -e "\nGwlink stats for port @ $port : "
+	  for ri in ${!gwlink_regoffs[@]}
+	  do
+	    regoffs=${gwlink_regoffs[$ri]}
+	    regaddr=$(( $port + ( $regoffs * 4 )  ))
+	    regname=${gwlink_regnames[$ri]}
+	    value=$(devmem $regaddr 32)
+	    echo "$regname : $value"
+
+	  done
+  done
+}
+
+
+function link_exit_reset() {
+
+  reset_value=0x0
+
+  # Bring all links out of reset
+  for i in ${!gwlink_bars[@]}
+  do
+ 	  port=${gwlink_bars[$i]}
+	  reset_reg=$(( $port + 0x8000 ))
+	  reg_hex=$(printf "0x%x" $reset_reg)
+	  echo "Resetting link @ $port:  devmem $reg_hex 32 $reset_value"
+	  devmem $reset_reg 32 $reset_value
+  done
+
+  echo "Verfy links are out of reset (all regs should be $reset_value)"
+  # verify
+  # Poll until these are all 0 - means reset complete (we're not in reset state anymore)
+  for i in ${!gwlink_bars[@]}
+  do
+	  port=${gwlink_bars[$i]}
+	  reset_reg=$(( $port + 0x8004 ))
+	  reg_hex=$(printf "0x%x" $reset_reg)
+	  reset_val=$(devmem $reset_reg)
+	  while [ $reset_val != "0x00000000" ]
+	  do
+	    reset_val=$(devmem $reset_reg)
+	    sleep 1
+	    echo "Polling $reset_reg, current value $reset_val"
+	  done
+	  echo "Link @ $reg_hex reset OK: value $reset_val"
+  done
+}
+
+function link_reset(){
+  echo "Resetting links"
+  reset_value = 3
+  for i in ${!gwlink_bars[@]}
+  do
+ 	  port=${gwlink_bars[$i]}
+	  reset_reg=$(( $port + 0x8000 ))
+	  reg_hex=$(printf "0x%x" $reset_reg)
+	  echo "Link @ $port entering reset"
+	  devmem $reset_reg 32 $reset_value
+  done
+}
+
+function silence_check(){
+  echo "Checking for link silence"
+  status1=$(link_status)
+  status2=$(link_status)
+  sleep 1
+  status3=$(link_status)
+  status4=$(link_status)
+
+  diff1=$(diff <(echo "$status1") <(echo "$status2"))
+  diff2=$(diff <(echo "$status2") <(echo "$status3"))
+  diff3=$(diff <(echo "$status3") <(echo "$status4"))
+
+  if [ "$diff1" != "" ] || [ "$diff2" != "" ] ||  [ "$diff3"  != "" ]
+  then
+	  echo "Gateway link status changed $diff1 $diff2 $diff3"
+	  exit 1
+  fi
+
+}
+
+
+function disable_l2(){
+  echo "Disabling L2 functionality"
+  devmem 0xb0100004 32 0x00
+  devmem 0xb0180004 32 0x00
+  echo "Read back GW L2 mode enable. Should read 0x00"
+  devmem 0xb0100004 32
+  devmem 0xb0180004 32
+}
+
+function open_mk2_exchange_window(){
+  echo "Opening Mk2 exchange window"
+  devmem 0xb8003044 32 0 # ipu0
+  devmem 0xba003044 32 0 # ipu1
+  devmem 0xbc003044 32 0 # ipu2
+  devmem 0xbe003044 32 0 # ipu3
+}
+
+function setup_l2(){
+  # MAC0 = 0x0000000100000001
+  # MAC1 = 0x0000000200000002
+  # Link config register: enable retry; skip this step to run with no retry enabled
+  # See T28824.
+  devmem 0xb0100004 32 0x1
+  devmem 0xb0180004 32 0x1
+  # Local MAC, lower
+  devmem 0xb0100068 32 0x1 # MAC0[31:0]
+  devmem 0xb0180068 32 0x2 # MAC1[31:0]
+  # Local MAC, upper
+  devmem 0xb010006c 32 0x1 # MAC0[47:32]
+  devmem 0xb018006c 32 0x2 # MAC0[47:32]
+  # Remote MAC, lower
+  devmem 0xb0100070 32 0x2 # MAC1[31:0]
+  devmem 0xb0180070 32 0x1 # MAC0[31:0]
+  # Remote MAC, upper
+  devmem 0xb0100074 32 0x2 # MAC1[47:32]
+  devmem 0xb0180074 32 0x1 # MAC0[47:32]
+  # VLAN ID
+  devmem 0xb0100078 32 3 # MAC0[31:0]
+  devmem 0xb0180078 32 3 # MAC0[31:0]
+}
+
+function enable_vdm {
+  # Tell the GW to use VDM instead of normal pcie writes when sending GWLink
+  # packets to the IPU. See T28829.
+
+  #create an array of IPU IDs in hex
+  source /opt/gc_drivers/enable.sh && for i in {0..3}; do ipuid=$(gc-info -d $i --nlc-status | grep IPUID | awk 'NR==1{print $4}' | awk -F: '{print $2}'); ids+=( $ipuid ); done
+  echo "IPU_IDs:" ${ids[*]}
+
+  #create a second array containing the values to be written
+  for i in {0..3}; do devmem_ids+=($((((0x1<<$((16+${ids[$i]}))))+1))); done
+  echo -n  "DEVMEM_IDS: " && printf "%#x " ${devmem_ids[*]}
+  devmem 0xb00020d0 32 ${devmem_ids[0]} # Logical IPU3
+  devmem 0xb00030d0 32 ${devmem_ids[1]} # Logical IPU2
+  devmem 0xb00040d0 32 ${devmem_ids[2]} # Logical IPU1
+  devmem 0xb00050d0 32 ${devmem_ids[3]} # Logical IPU0
+  # Tell the IPU to accept VDM packets instead of dropping silently.
+  setpci -v -s "0001:01:00.0" 0x720.L=2
+  setpci -v -s "0002:01:00.0" 0x720.L=2
+  setpci -v -s "0003:01:00.0" 0x720.L=2
+  setpci -v -s "0004:01:00.0" 0x720.L=2
+  echo "Expect 0xXXXXX0280 for the following registers:"
+  setpci -v -s "0001:01:00.0" 0x71C.L
+  setpci -v -s "0002:01:00.0" 0x71C.L
+  setpci -v -s "0003:01:00.0" 0x71C.L
+  setpci -v -s "0004:01:00.0" 0x71C.L
+}
+
+function is_mk1 {
+  dmesg | grep -q "ipu driver: IPU1 device found"
+}
+
+function is_mk2 {
+  dmesg | grep -q "ipu driver: IPU2 device found"
+}
+
+function init_l2(){
+  if is_mk1; then
+    echo "Disabling l2 on Mk1"
+    disable_l2
+  elif is_mk2; then
+    echo "Setting up l2 on Mk2"
+    setup_l2
+  else
+    echo "error: couldn't detect IPU arch" >&2
+    exit 1
+  fi
+}
+
+function enable_gwlink_in_spb() {
+  addr=$1
+  # Read original value
+  cfg_reg=$(sudo devmem "$addr" 32)
+  # Turn off GW link disable
+  set_cfgreg=$(("$cfg_reg" & 0xfffffeff))
+  # Set the new config reg value
+  printf "  setting addr=0x%x to value=0x%x (was 0x%x)\n" "$addr" "$set_cfgreg" "$cfg_reg"
+  sudo devmem "$addr" 32 "$set_cfgreg"
+}
+
+function link_enable(){
+  echo "Enabling gatway links - FPU port enable"
+  devmem 0xb0100008 32 0x01
+  devmem 0xb0180008 32 0x01
+
+  init_l2
+
+  is_mk2
+  if [ "$?" -eq 0 ]; then
+    echo "Setting up the exchange window and Enabling VDM on Mk2"
+    open_mk2_exchange_window
+    enable_vdm
+  fi
+
+  echo "Enabling gwlinks in all SPB's"
+  export -f enable_gwlink_in_spb
+  seq 2 5 | parallel -I N enable_gwlink_in_spb 0xb000N094
+}
+
+function clear_pkt_cntrs() {
+  for i in ${!gwlink_bars[@]}
+  do
+    port=${gwlink_bars[$i]}
+    echo -e "\nClearing packet counter stats for port @ $port : "
+    # 0x11 : FPU_STAT_RX_GOOD_PACKETS_REG_ADDR
+    # 0x12 : FPU_STAT_RX_TOTAL_PACKETS_REG_ADDR
+    # 0x16 : FPU_STAT_TX_TOTAL_PACKETS_REG_ADDR
+    for ri in 0x11 0x12 0x16
+    do
+      regoffs=${gwlink_regoffs[$ri]}
+      regaddr=$(( $port + ( $regoffs * 4 ) ))
+      regname=${gwlink_regnames[$ri]}
+      devmem "$regaddr" 32 0
+      value=$(devmem "$regaddr" 32)
+      echo "$regname : $value"
+    done
+  done
+}
+
+function usage(){
+  echo "Usage: $0 [command] [args]"
+}
+
+function --help(){
+  if [ "$#" == 0 ]
+  then
+	  usage
+	  exit 0
+  fi
+
+}
+
+cmd=$1
+shift
+$cmd $@
+

@@ -1,0 +1,1 @@
+bash scripts/run_distributed_pretrain_ascend.sh /path/modelarts/params_256px16.ini /path/hccl.json

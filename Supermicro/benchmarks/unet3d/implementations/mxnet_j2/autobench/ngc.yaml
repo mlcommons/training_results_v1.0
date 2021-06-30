@@ -1,0 +1,45 @@
+NGC: &NGC
+  docker_image: nvcr.io/nvidian/swdl/unet3d_mx:master
+  hostname: ngc
+  job_name: ml-model.Unet3d-mlperf
+  datasets:
+#    /data: 67426 # MSD 01
+#    /data: 68873 # MSD 03
+#    /data: 68874 # KiTS19
+    /data: 69366 # KiTS19 small
+
+reports:
+  filename: unet512_mxnet
+  types:
+    - xls
+
+NGC_16GB_8GPU: &NGC_16GB_8GPU
+  <<: *NGC
+  instance : dgx1v.16g.8.norm
+
+jobs:
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 192 224 224 --optimizer nag --learning_rate 1.0 --fold 3
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 192 224 224 --optimizer nag --learning_rate 1.0 --fold 3
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 192 224 224 --optimizer nag --learning_rate 1.0 --fold 3 --init
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 192 224 224 --optimizer nag --learning_rate 1.0 --fold 3 --init
+    backend: *NGC_16GB_8GPU
+
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 128 160 160 --optimizer nag --learning_rate 1.0 --fold 3
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 128 160 160 --optimizer nag --learning_rate 1.0 --fold 3
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 128 160 160 --optimizer nag --learning_rate 1.0 --fold 3 --init
+    backend: *NGC_16GB_8GPU
+  - steps:
+      - horovodrun -np 8 python3 main.py --amp --epochs 6000 --evaluate_every 25 --data_dir /data/ --log_dir /results/log.json --loader dali_numpy --val_input_shape 128 160 160 --optimizer nag --learning_rate 1.0 --fold 3 --init
+    backend: *NGC_16GB_8GPU

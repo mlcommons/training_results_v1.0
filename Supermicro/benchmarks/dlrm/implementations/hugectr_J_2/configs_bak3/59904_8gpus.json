@@ -1,0 +1,238 @@
+{
+    "solver": {
+        "eval_interval": 3501,
+        "gpu": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "lr_policy": "fixed",
+        "display": 1000,
+        "eval_batches": 1489,
+        "max_iter": 70033,
+        "mixed_precision": 1024,
+        "snapshot": 10000000,
+        "batchsize": 59904,
+        "batchsize_eval": 59904,
+        "eval_metrics": [
+            "AUC:0.8025"
+        ],
+        "snapshot_prefix": "./"
+    }
+    "optimizer": {
+        "global_update": false,
+        "type": "SGD",
+        "sgd_hparam": {
+            "warmup_steps": 2500,
+            "learning_rate": 26,
+            "decay_steps": 23811,
+            "decay_start": 49023,
+            "end_lr": 0.0,
+            "atomic_update": true,
+            "decay_power": 2.0
+        }
+    },
+    "layers": [
+        {
+            "sparse": [
+                {
+                    "max_feature_num_per_sample": 26,
+                    "top": "data1",
+                    "type": "LocalizedSlot",
+                    "max_nnz": 1,
+                    "slot_num": 26
+                }
+            ],
+            "format": "Raw",
+            "type": "Data",
+            "label": {
+                "label_dim": 1,
+                "top": "label"
+            },
+            "eval_source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/test_data.bin",
+            "check": "None",
+            "eval_num_samples": 89137319,
+            "dense": {
+                "top": "dense",
+                "dense_dim": 13
+            },
+            "source": "/raid/datasets/criteo/mlperf/40m.limit_preshuffled/train_data.bin",
+            "cache_eval_data": 1613,
+            "name": "data",
+            "num_samples": 4195196928,
+            "slot_size_array": [
+                39884406,
+                39043,
+                17289,
+                7420,
+                20263,
+                3,
+                7120,
+                1543,
+                63,
+                38532951,
+                2953546,
+                403346,
+                10,
+                2208,
+                11938,
+                155,
+                4,
+                976,
+                14,
+                39979771,
+                25641295,
+                39664984,
+                585935,
+                12972,
+                108,
+                36
+            ]
+        },
+        {
+            "name": "sparse_embedding1",
+            "top": "sparse_embedding1",
+            "type": "LocalizedSlotSparseEmbeddingOneHot",
+            "bottom": "data1",
+            "sparse_embedding_hparam": {
+                "embedding_vec_size": 128,
+                "slot_size_array": [
+                    39884406,
+                    39043,
+                    17289,
+                    7420,
+                    20263,
+                    3,
+                    7120,
+                    1543,
+                    63,
+                    38532951,
+                    2953546,
+                    403346,
+                    10,
+                    2208,
+                    11938,
+                    155,
+                    4,
+                    976,
+                    14,
+                    39979771,
+                    25641295,
+                    39664984,
+                    585935,
+                    12972,
+                    108,
+                    36
+                ],
+                "combiner": 0
+            }
+        },
+        {
+            "name": "fc1",
+            "type": "FusedInnerProduct",
+            "position": "Head",
+            "bottom": "dense",
+            "top": ["fc11","fc12"],
+            "fc_param": {
+              "num_output": 512
+            }
+        },
+      
+        {
+            "name": "fc2",
+            "type": "FusedInnerProduct",
+            "position": "Body",
+            "bottom": ["fc11","fc12"],
+            "top": ["fc21","fc22"],
+            "fc_param": {
+              "num_output": 256
+            }
+        },
+      
+      
+        {
+            "name": "fc3",
+            "type": "FusedInnerProduct",
+            "position": "Tail",
+            "bottom": ["fc21","fc22"],
+            "top": "fc3",
+            "fc_param": {
+              "num_output": 128
+            }
+        },
+      
+        {
+            "name": "interaction1",
+            "type": "Interaction",
+            "bottom": ["fc3", "sparse_embedding1"],
+            "top": "interaction1"
+        },
+      
+        {
+            "name": "fc4",
+            "type": "FusedInnerProduct",
+            "bottom": "interaction1",
+            "position": "Head",
+            "top": ["fc41","fc42"],
+             "fc_param": {
+              "num_output": 1024
+            }
+        },
+      
+        {
+            "name": "fc5",
+            "type": "FusedInnerProduct",
+            "position": "Body",
+            "bottom": ["fc41","fc42"],
+            "top": ["fc51","fc52"],
+            "fc_param": {
+              "num_output": 1024
+            }
+        },
+      
+        {
+            "name": "fc6",
+            "type": "FusedInnerProduct",
+            "position": "Body",
+            "bottom": ["fc51","fc52"],
+            "top": ["fc61","fc62"],
+            "fc_param": {
+              "num_output": 512
+            }
+        },
+      
+        {
+            "name": "fc7",
+            "type": "FusedInnerProduct",
+            "position": "Tail",
+            "bottom": ["fc61","fc62"],
+            "top": "fc7",
+            "fc_param": {
+              "num_output": 256
+            }
+        },
+        {
+            "name": "fc8",
+            "top": "fc8",
+            "type": "InnerProduct",
+            "bottom": "fc7",
+            "fc_param": {
+                "num_output": 1
+            }
+        },
+        {
+            "name": "loss",
+            "top": "loss",
+            "type": "BinaryCrossEntropyLoss",
+            "bottom": [
+                "fc8",
+                "label"
+            ]
+        }
+    ],
+}
