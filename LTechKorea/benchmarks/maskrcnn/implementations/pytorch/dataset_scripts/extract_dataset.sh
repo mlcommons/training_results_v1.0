@@ -1,3 +1,5 @@
+echo "DATASET_DIR: $DATASET_DIR"
+
 mkdir $DATASET_DIR/coco2017
 mv train2017.zip $DATASET_DIR/coco2017
 mv val2017.zip $DATASET_DIR/coco2017
