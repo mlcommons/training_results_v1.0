@@ -210,7 +210,7 @@ class DualNetwork():
         save_file contains weights that match the graph. Used
         to set the weights to a different version of the player
         without redifining the entire graph."""
-        tf.train.Saver().restore(self.sess, save_file)
+        tf.compat.v1.train.Saver().restore(self.sess, save_file)
 
     def run(self, position):
         probs, values = self.run_many([position])
@@ -326,6 +326,8 @@ def model_fn(features, labels, mode, params, tf_sess=False):
 
     optimizer = tf.compat.v1.train.MomentumOptimizer(
         learning_rate, params['sgd_momentum'])
+
+    hvd.init()
 
     # hvd multigpu
     optimizer = hvd.DistributedOptimizer(optimizer)
@@ -692,7 +694,7 @@ def bootstrap():
         model_fn(features, labels, tf.estimator.ModeKeys.PREDICT,
                  params=FLAGS.flag_values_dict())
         sess.run(tf.global_variables_initializer())
-        tf.train.Saver().save(sess, save_file)
+        tf.compat.v1.train.Saver().save(sess, save_file)
 
 
 def export_model(model_path):
@@ -785,7 +787,7 @@ def freeze_graph_tpu(model_path):
             tf.identity(policy_output, policy_name)
             tf.identity(value_output, value_name)
 
-        tf.train.Saver().restore(sess, model_path)
+        tf.compat.v1.train.Saver().restore(sess, model_path)
 
     out_graph = tf.graph_util.convert_variables_to_constants(
         sess, sess.graph.as_graph_def(), output_names)
