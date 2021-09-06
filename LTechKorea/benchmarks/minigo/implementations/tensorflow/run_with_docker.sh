@@ -39,6 +39,16 @@ readonly _logfile_base="${LOGDIR}/${DATESTAMP}"
 readonly _cont_name=minigo
 _cont_mounts=("--volume=${DATADIR}:/data" "--volume=${LOGDIR}:/results")
 
+echo "DGXSYSTEM: ${DGXSYSTEM}"
+echo "DGXNGPU: ${DGXNGPU}"
+echo "CONT: ${CONT}"
+echo "DATADIR: ${DATADIR}"
+echo "LOGDIR: ${LOGDIR}"
+echo "_config_file: ${_config_file}"
+echo "_seed_override: ${_seed_override}"
+echo "_logfile_base: ${_logfile_base}"
+echo "_cont_mounts: ${_cont_mounts}"
+
 # Setup directories
 mkdir -p "${LOGDIR}"
 
@@ -63,7 +73,19 @@ docker run --rm --init --gpus=all --detach \
     --name="${_cont_name}" "${_cont_mounts[@]}" \
     "${CONT}" sleep infinity
 #make sure container has time to finish initialization
-sleep 30
+#sleep 30
+set +x
+
+secs=$((1 * 30))
+while [ $secs -gt 0 ]
+do
+  echo -ne "$secs \r"
+  sleep 1
+  : $((secs--))
+done
+
+set -x
+
 docker exec -it "${_cont_name}" true
 
 # Run experiments
