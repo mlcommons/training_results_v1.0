@@ -175,8 +175,8 @@ class UpdateRatioSessionHook(tf.estimator.SessionRunHook):
         # will get called within a graph context containing our model graph.
 
         self.file_writer = tf.summary.FileWriterCache.get(self.output_dir)
-        self.weight_tensors = tf.trainable_variables()
-        self.global_step = tf.train.get_or_create_global_step()
+        self.weight_tensors = tf.compat.v1.trainable_variables()
+        self.global_step = tf.compat.v1.train.get_or_create_global_step()
 
     def before_run(self, run_context):
         """Called before each call to run()."""
@@ -233,7 +233,7 @@ def init_train(rank, tcomm, model_dir):
 
 
     # Training
-    tf_records_ph = tf.placeholder(tf.string)
+    tf_records_ph = tf.compat.v1.placeholder(tf.string)
     data_iter = preprocessing.get_input_tensors(FLAGS.train_batch_size // hvd.size(),
                                                 FLAGS.input_layout,
                                                 tf_records_ph,

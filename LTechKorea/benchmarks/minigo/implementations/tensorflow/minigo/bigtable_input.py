@@ -139,7 +139,7 @@ def make_single_array(ds, batch_size=8*1024):
     if nshapes > 0:
         raise ValueError('Dataset must be comprised of scalars (TensorShape=[])')
     batches = []
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         ds = ds.batch(batch_size)
         iterator = ds.make_initializable_iterator()
         sess.run(iterator.initializer)
@@ -573,7 +573,7 @@ class GameQueue:
         and ct_<game_id>_<move_count> rows.
         """
         for g in range(start_game, end_game, interval):
-            with tf.Session() as sess:
+            with tf.compat.v1.Session() as sess:
                 start_row = ROW_PREFIX.format(g)
                 end_row = ROW_PREFIX.format(g + interval)
                 print('Range:', start_row, end_row)
@@ -737,7 +737,7 @@ def count_elements_in_dataset(ds, batch_size=1*1024, parallel_batch=8):
     Returns:
       The number of elements in the dataset.
     """
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         dsc = ds.apply(tf.data.experimental.enumerate_dataset())
         dsc = dsc.apply(tf.data.experimental.map_and_batch(
             lambda c, v: c, batch_size, num_parallel_batches=parallel_batch))

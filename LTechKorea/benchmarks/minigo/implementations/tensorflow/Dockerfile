@@ -37,10 +37,14 @@ RUN mkdir minigo/cc/tensorflow/lib \
  && cp /usr/local/lib/tensorflow/libtensorflow_cc.so.1 minigo/cc/tensorflow/lib \
  && cp -r /usr/local/lib/python3.8/dist-packages/tensorflow_core/include minigo/cc/tensorflow/include
 
+RUN /usr/bin/python -m pip install --upgrade pip
+
 # Install Python dependencies
 WORKDIR /opt/reinforcement/minigo
-RUN pip3 install --no-cache-dir https://github.com/mlperf/logging/archive/5bc16bf.zip \
- && pip3 install --no-cache-dir -r requirements.txt
+#RUN pip3 install --no-cache-dir https://github.com/mlperf/logging/archive/5bc16bf.zip \
+RUN pip3 install --no-cache-dir \
+  https://github.com/mlperf/logging/archive/refs/tags/1.0.0.zip \
+  && pip3 install --no-cache-dir -r requirements.txt
 
 # Install pybind11 to enable C++-python interface
 RUN pip3 install --no-cache-dir pytest \
