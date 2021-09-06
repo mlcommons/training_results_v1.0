@@ -180,11 +180,11 @@ class DualNetwork():
         self.save_file = save_file
         self.inference_input = None
         self.inference_output = None
-        config = tf.ConfigProto()
+        config = tf.compat.v1.ConfigProto()
         config.gpu_options.allow_growth = True
         if FLAGS.gpu_device_list is not None:
             config.gpu_options.visible_device_list = FLAGS.gpu_device_list
-        self.sess = tf.Session(graph=tf.Graph(), config=config)
+        self.sess = tf.compat.v1.Session(graph=tf.Graph(), config=config)
         self.initialize_graph()
 
     def initialize_graph(self):
@@ -262,9 +262,9 @@ def get_inference_input():
         feature_shape = [None, get_features_planes(), go.N, go.N]
     else:
         raise ValueError('invalid input_layout "%s"' % FLAGS.input_layout)
-    return (tf.placeholder(feature_type, feature_shape, name='pos_tensor'),
-            {'pi_tensor': tf.placeholder(tf.float32, [None, go.N * go.N + 1]),
-             'value_tensor': tf.placeholder(tf.float32, [None])})
+    return (tf.compat.v1.placeholder(feature_type, feature_shape, name='pos_tensor'),
+            {'pi_tensor': tf.compat.v1.placeholder(tf.float32, [None, go.N * go.N + 1]),
+             'value_tensor': tf.compat.v1.placeholder(tf.float32, [None])})
 
 
 def model_fn(features, labels, mode, params, tf_sess=False):
@@ -304,17 +304,17 @@ def model_fn(features, labels, mode, params, tf_sess=False):
     value_cost = params['value_cost_weight'] * tf.reduce_mean(
         tf.square(value_output - labels['value_tensor']))
 
-    reg_vars = [v for v in tf.trainable_variables()
+    reg_vars = [v for v in tf.compat.v1.trainable_variables()
                 if 'bias' not in v.name and 'beta' not in v.name]
     l2_cost = params['l2_strength'] * \
         tf.add_n([tf.nn.l2_loss(v) for v in reg_vars])
 
     combined_cost = policy_cost + value_cost + l2_cost
 
-    global_step = tf.train.get_or_create_global_step()
-    learning_rate = tf.train.piecewise_constant(
+    global_step = tf.compat.v1.train.get_or_create_global_step()
+    learning_rate = tf.compat.v1.train.piecewise_constant(
         global_step, params['lr_boundaries'], params['lr_rates'])
-    update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
 
     # Insert quantization ops if requested
     if params['quantize']:
@@ -324,7 +324,7 @@ def model_fn(features, labels, mode, params, tf_sess=False):
         else:
             contrib_quantize.create_eval_graph()
 
-    optimizer = tf.train.MomentumOptimizer(
+    optimizer = tf.compat.v1.train.MomentumOptimizer(
         learning_rate, params['sgd_momentum'])
 
     # hvd multigpu
@@ -617,7 +617,7 @@ def get_estimator():
 
 
 def _get_nontpu_estimator():
-    session_config = tf.ConfigProto()
+    session_config = tf.compat.v1.ConfigProto()
     session_config.gpu_options.allow_growth = True
     # session_config.graph_options.optimizer_options.global_jit_level = tf.OptimizerOptions.ON_1
     session_config.gpu_options.force_gpu_compatible = True
@@ -636,7 +636,7 @@ def _get_nontpu_estimator():
         params=FLAGS.flag_values_dict())
 
 def _get_session():
-    session_config = tf.ConfigProto()
+    session_config = tf.compat.v1.ConfigProto()
     session_config.gpu_options.allow_growth = True
     # session_config.graph_options.optimizer_options.global_jit_level = tf.OptimizerOptions.ON_1
     session_config.gpu_options.force_gpu_compatible = True
@@ -644,7 +644,7 @@ def _get_session():
     session_config.intra_op_parallelism_threads = 1
     session_config.inter_op_parallelism_threads = 4
 
-    return tf.Session(config=session_config)
+    return tf.compat.v1.Session(config=session_config)
 
 
 def _get_tpu_estimator():
@@ -659,7 +659,7 @@ def _get_tpu_estimator():
         save_checkpoints_steps=max(1000, FLAGS.iterations_per_loop),
         save_summary_steps=FLAGS.summary_steps,
         keep_checkpoint_max=FLAGS.keep_checkpoint_max,
-        session_config=tf.ConfigProto(
+        session_config=tf.compat.v1.ConfigProto(
             allow_soft_placement=True, log_device_placement=True),
         tpu_config=contrib_tpu_python_tpu_tpu_config.TPUConfig(
             iterations_per_loop=FLAGS.iterations_per_loop,
@@ -686,7 +686,7 @@ def bootstrap():
     maybe_set_seed()
     initial_checkpoint_name = 'model.ckpt-1'
     save_file = os.path.join(FLAGS.work_dir, initial_checkpoint_name)
-    sess = tf.Session(graph=tf.Graph())
+    sess = tf.compat.v1.Session(graph=tf.Graph())
     with sess.graph.as_default():
         features, labels = get_inference_input()
         model_fn(features, labels, tf.estimator.ModeKeys.PREDICT,
@@ -761,7 +761,7 @@ def freeze_graph_tpu(model_path):
         tpu_cluster_resolver = contrib_cluster_resolver.TPUClusterResolver(
             FLAGS.tpu_name, zone=None, project=None)
         tpu_grpc_url = tpu_cluster_resolver.get_master()
-    sess = tf.Session(tpu_grpc_url)
+    sess = tf.compat.v1.Session(tpu_grpc_url)
 
     output_names = []
     with sess.graph.as_default():
@@ -770,7 +770,7 @@ def freeze_graph_tpu(model_path):
         feature_type = tf.bool if FLAGS.bool_features else tf.float32
         for i in range(FLAGS.num_tpu_cores):
             name = 'pos_tensor_%d' % i
-            features = tf.placeholder(
+            features = tf.compat.v1.placeholder(
                 feature_type, [None], name=name)
             replicated_features.append((features,))
         outputs = contrib_tpu.replicate(

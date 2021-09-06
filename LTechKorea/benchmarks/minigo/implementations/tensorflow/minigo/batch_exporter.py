@@ -47,7 +47,7 @@ flags.DEFINE_integer('training_thin', 4,
                      'Factor by which to thin out training sets (keep 1:N)')
 
 flags.DEFINE_integer('batch_size', 1024,
-                     'How many TFRecords to pull through tf.Session at a time')
+                     'How many TFRecords to pull through tf.compat.v1.Session at a time')
 
 flags.DEFINE_string('output_prefix', None,
                     'Name of output file to receive TFRecords')
@@ -84,7 +84,7 @@ def _export_training_set(args):
     gq_c = bigtable_input.GameQueue(spec.project, spec.instance, spec.table + '-nr')
     total_moves = mix.moves_r + mix.moves_c
 
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         ds = bigtable_input.get_unparsed_moves_from_games(gq_r, gq_c,
                                                           start_r, start_c,
                                                           mix)
