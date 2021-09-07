@@ -39,6 +39,16 @@ readonly _logfile_base="${LOGDIR}/${DATESTAMP}"
 readonly _cont_name=minigo
 _cont_mounts=("--volume=${DATADIR}:/data" "--volume=${LOGDIR}:/results")
 
+echo "DGXSYSTEM: ${DGXSYSTEM}"
+echo "DGXNGPU: ${DGXNGPU}"
+echo "CONT: ${CONT}"
+echo "DATADIR: ${DATADIR}"
+echo "LOGDIR: ${LOGDIR}"
+echo "_config_file: ${_config_file}"
+echo "_seed_override: ${_seed_override}"
+echo "_logfile_base: ${_logfile_base}"
+echo "_cont_mounts: ${_cont_mounts}"
+
 # Setup directories
 mkdir -p "${LOGDIR}"
 
@@ -55,13 +65,34 @@ cleanup_docker
 trap 'set -eux; cleanup_docker' EXIT
 
 # Setup container
-nvidia-docker run --rm --init --detach \
+#nvidia-docker run --rm --init --detach \
+
+VERBOSE=0 # default 0
+SUGGESTED_GAMES=${SUGGESTED_GAMES:-"8192"}  # default: 8192
+NUM_ITERATIONS=${NUM_ITERATIONS:-"75"}  # default: 75
+
+docker run --rm --init --gpus=all --detach \
     --net=host --uts=host --ipc=host --security-opt=seccomp=unconfined \
     --ulimit=stack=67108864 --ulimit=memlock=-1 \
     --name="${_cont_name}" "${_cont_mounts[@]}" \
+    -e VERBOSE=${VERBOSE} \
+    -e SUGGESTED_GAMES=${SUGGESTED_GAMES} \
+    -e NUM_ITERATIONS=${NUM_ITERATIONS} \
     "${CONT}" sleep infinity
 #make sure container has time to finish initialization
-sleep 30
+#sleep 30
+set +x
+
+secs=$((1 * 30))
+while [ $secs -gt 0 ]
+do
+  echo -ne "$secs \r"
+  sleep 1
+  : $((secs--))
+done
+
+set -x
+
 docker exec -it "${_cont_name}" true
 
 # Run experiments
