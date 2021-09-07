@@ -67,10 +67,17 @@ trap 'set -eux; cleanup_docker' EXIT
 # Setup container
 #nvidia-docker run --rm --init --detach \
 
+VERBOSE=0 # default 0
+SUGGESTED_GAMES=${SUGGESTED_GAMES:-"8192"}  # default: 8192
+NUM_ITERATIONS=${NUM_ITERATIONS:-"75"}  # default: 75
+
 docker run --rm --init --gpus=all --detach \
     --net=host --uts=host --ipc=host --security-opt=seccomp=unconfined \
     --ulimit=stack=67108864 --ulimit=memlock=-1 \
     --name="${_cont_name}" "${_cont_mounts[@]}" \
+    -e VERBOSE=${VERBOSE} \
+    -e SUGGESTED_GAMES=${SUGGESTED_GAMES} \
+    -e NUM_ITERATIONS=${NUM_ITERATIONS} \
     "${CONT}" sleep infinity
 #make sure container has time to finish initialization
 #sleep 30
