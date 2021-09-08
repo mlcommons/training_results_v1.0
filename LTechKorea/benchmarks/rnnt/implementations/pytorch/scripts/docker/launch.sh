@@ -15,11 +15,17 @@
 
 #!/bin/bash
 
-DATA_DIR=$1
-CHECKPOINT_DIR=$2
-RESULT_DIR=$3
-METADATA_DIR=$4
-SENTENCEPIECES_DIR=$5
+#DATA_DIR=$1
+#CHECKPOINT_DIR=$2
+#RESULT_DIR=$3
+#METADATA_DIR=$4
+#SENTENCEPIECES_DIR=$5
+
+DATA_DIR="/opt/data/Dataset/training/rnnt"
+CHECKPOINT_DIR="${DATA_DIR}/checkpoints"
+RESULT_DIR="$PWD/results"
+METADATA_DIR="${DATA_DIR}/tokenized"
+SENTENCEPIECES_DIR="${DATA_DIR}/sentencepieces"
 
 docker run -it --rm \
   --gpus='all' \
