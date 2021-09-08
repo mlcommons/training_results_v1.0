@@ -43,7 +43,7 @@ RUN /usr/bin/python -m pip install --upgrade pip
 WORKDIR /opt/reinforcement/minigo
 #RUN pip3 install --no-cache-dir https://github.com/mlperf/logging/archive/5bc16bf.zip \
 RUN pip3 install --no-cache-dir \
-  https://github.com/mlperf/logging/archive/refs/tags/1.0.0.zip \
+  https://github.com/mlcommons/logging/archive/refs/tags/1.0.0.zip \
   && pip3 install --no-cache-dir -r requirements.txt
 
 # Install pybind11 to enable C++-python interface

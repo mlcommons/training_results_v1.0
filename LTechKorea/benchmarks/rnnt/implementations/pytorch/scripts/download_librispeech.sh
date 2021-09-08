@@ -20,9 +20,16 @@ DATA_ROOT_DIR="/datasets"
 DATA_DIR="${DATA_ROOT_DIR}/${DATA_SET}"
 if [ ! -d "$DATA_DIR" ]
 then
-    mkdir $DATA_DIR
+    mkdir -p $DATA_DIR
     chmod go+rx $DATA_DIR
-    python utils/download_librispeech.py utils/librispeech.csv $DATA_DIR -e ${DATA_ROOT_DIR}/
 else
     echo "Directory $DATA_DIR already exists."
 fi
+
+python utils/download_librispeech.py \
+  utils/librispeech.csv \
+  $DATA_DIR \
+  -e ${DATA_ROOT_DIR} \
+#  --skip_download \
+#  --skip_checksum \
+#  --skip_extract
