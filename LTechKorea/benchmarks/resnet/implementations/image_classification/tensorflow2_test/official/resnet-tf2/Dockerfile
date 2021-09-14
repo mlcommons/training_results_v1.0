@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
 
 # Mount data into the docker
 ADD . /research/resnet
-#ADD ./tensorflow2 /research/resnet-tf2
+ADD ./tensorflow2 /research/resnet-tf2
 
 WORKDIR /research/resnet
 RUN pip install -r official/requirements.txt
