@@ -33,6 +33,7 @@ export HOROVOD_GROUPED_ALLREDUCES=1
 ## System run parms
 export DGXNNODES=100
 export DGXSYSTEM=$(basename $(readlink -f ${BASH_SOURCE[0]}) | sed 's/^config_//' | sed 's/\.sh$//' )
+NEXP=${NEXP:-5} # Default number of times to run the benchmark
 WALLTIME_MINUTES=24
 export WALLTIME=$((${NEXP} * ${WALLTIME_MINUTES}))
 
