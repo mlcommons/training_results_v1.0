@@ -34,6 +34,7 @@ export OMPI_MCA_btl=^openib
 ## System run parms
 export DGXNNODES=13
 export DGXSYSTEM=$(basename $(readlink -f ${BASH_SOURCE[0]}) | sed 's/^config_//' | sed 's/\.sh$//' )
+NEXP=${NEXP:-5} # Default number of times to run the benchmark
 WALLTIME_MINUTES=30
 export WALLTIME=$((${NEXP} * ${WALLTIME_MINUTES}))
 
