@@ -17,7 +17,7 @@ docker push <docker/registry>/mlperf-nvidia:language_model
 
 Start the container interactively, mounting `bert_data/` as `/cks`, then run
 ```
-python convert_tf_checkpoint.py --tf_checkpoint /cks/model.ckpt-28252.index --bert_config_path /cks/bert_config.json --output_checkpoint model.ckpt-28252.pt
+python convert_tf_checkpoint.py --tf_checkpoint /cks/model.ckpt-28252.index --bert_config_path /cks/bert_config.json --output_checkpoint /cks/model.ckpt-28252.pt
 ```
 
 # Download the preprocessed text dataset
